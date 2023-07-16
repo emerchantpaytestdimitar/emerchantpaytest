@@ -1,6 +1,7 @@
 package com.example.emerchantpay.application
 
 import android.app.Application
+import com.example.emerchantpay.account.di.accountModule
 import com.example.emerchantpay.data.di.retrofitModule
 import com.example.emerchantpay.data.di.roomModule
 import org.koin.android.ext.koin.androidContext
@@ -17,7 +18,7 @@ class EmerchantpayApplication: Application() {
     private fun loadKoinModules() {
         startKoin {
             androidContext(this@EmerchantpayApplication)
-            modules(retrofitModule, roomModule, retrofitModule, roomModule)
+            modules(accountModule, retrofitModule, roomModule, retrofitModule, roomModule)
         }
     }
 }

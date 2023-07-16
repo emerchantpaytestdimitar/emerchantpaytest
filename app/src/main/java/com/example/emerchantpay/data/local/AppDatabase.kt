@@ -2,10 +2,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.emerchantpay.account.domain.User
-import com.example.emerchantpay.repository.domain.Repository
+import com.example.emerchantpay.account.domain.model.User
+import com.example.emerchantpay.repository.domain.RepositoryModel
 
-@Database(entities = [Repository::class, User::class], version = 1)
+@Database(entities = [RepositoryModel::class, User::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {

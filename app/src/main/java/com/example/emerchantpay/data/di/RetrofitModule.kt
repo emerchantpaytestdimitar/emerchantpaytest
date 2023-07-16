@@ -1,16 +1,20 @@
 package com.example.emerchantpay.data.di
 
+import com.example.emerchantpay.data.remote.Retrofit
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-const val BASE_URL = "https://api.github.com/"
+const val BASE_URL = "https://github.com"
+const val BASE_API_URL = "https://api.github.com"
+const val AUTHENTICATION_URL = "https://github.com/login/oauth/authorize"
+const val REDIRECT_URL = "https://www.emerchantpay.com/"
 
 val retrofitModule = module {
-    single<Retrofit> {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    single(named("token")) {
+        Retrofit.getInstance()
+    }
+
+    single(named("login")){
+        Retrofit.getInstanceApi()
     }
 }
