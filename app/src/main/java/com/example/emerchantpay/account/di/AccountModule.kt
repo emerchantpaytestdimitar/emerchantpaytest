@@ -1,8 +1,9 @@
 package com.example.emerchantpay.account.di
 
-import com.example.emerchantpay.account.data.LoginService
+import com.example.emerchantpay.account.data.ProfileService
 import com.example.emerchantpay.account.data.TokenService
 import com.example.emerchantpay.account.domain.repository.AccountRepository
+import com.example.emerchantpay.account.domain.repository.AccountRepositoryImpl
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
 import com.example.emerchantpay.data.di.retrofitModule
 import com.example.emerchantpay.data.di.roomModule
@@ -15,8 +16,8 @@ val accountModule = module {
     includes(roomModule, retrofitModule)
 
     single { get<Retrofit>(named("token")).create(TokenService::class.java) }
-    single { get<Retrofit>(named("login")).create(LoginService::class.java) }
-    single { AccountRepository(get(), get()) }
+    single { get<Retrofit>(named("login")).create(ProfileService::class.java) }
+    single<AccountRepository> { AccountRepositoryImpl(get(), get()) }
 
     viewModel { AccountViewModel(get()) }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.account.domain.repository.AccountRepository
+import com.example.emerchantpay.account.domain.repository.AccountRepositoryImpl
 import kotlinx.coroutines.launch
 
 class AccountViewModel(private val repository: AccountRepository) : ViewModel() {

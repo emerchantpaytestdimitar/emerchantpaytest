@@ -1,6 +1,5 @@
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,7 +77,9 @@ class LoginFragment : Fragment() {
 
     private fun setupLoginObserving() {
         viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
-            findNavController().navigate(R.id.profileFragment)
+            val bundle: Bundle = Bundle()
+            bundle.putParcelable("user", user)
+            findNavController().navigate(R.id.profileFragment, bundle)
         }
     }
 
