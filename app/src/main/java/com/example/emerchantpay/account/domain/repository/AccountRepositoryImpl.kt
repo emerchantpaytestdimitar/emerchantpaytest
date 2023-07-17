@@ -1,6 +1,6 @@
 package com.example.emerchantpay.account.domain.repository
 
-import com.example.emerchantpay.account.data.ProfileService
+import com.example.emerchantpay.account.data.remote.ProfileService
 import com.example.emerchantpay.account.data.TokenService
 import com.example.emerchantpay.account.domain.model.AccessTokenModel
 import com.example.emerchantpay.account.domain.model.User

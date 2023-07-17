@@ -1,7 +1,9 @@
 package com.example.emerchantpay.data.remote
 
-import com.example.emerchantpay.data.di.BASE_API_URL
-import com.example.emerchantpay.data.di.BASE_URL
+import com.example.emerchantpay.account.data.remote.LoginInterceptor
+import com.example.emerchantpay.account.data.remote.TokenInterceptor
+import com.example.emerchantpay.common.di.BASE_API_URL
+import com.example.emerchantpay.common.di.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

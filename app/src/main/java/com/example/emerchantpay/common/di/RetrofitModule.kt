@@ -1,5 +1,6 @@
-package com.example.emerchantpay.data.di
+package com.example.emerchantpay.common.di
 
+import com.example.emerchantpay.common.constants.ModuleConstants
 import com.example.emerchantpay.data.remote.Retrofit
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -10,11 +11,11 @@ const val AUTHENTICATION_URL = "https://github.com/login/oauth/authorize"
 const val REDIRECT_URL = "https://www.emerchantpay.com/"
 
 val retrofitModule = module {
-    single(named("token")) {
+    single(named(ModuleConstants.MODULE_NAME_RETROFIT_TOKEN)) {
         Retrofit.getInstance()
     }
 
-    single(named("login")){
+    single(named(ModuleConstants.MODULE_NAME_RETROFIT_API)){
         Retrofit.getInstanceApi()
     }
 }

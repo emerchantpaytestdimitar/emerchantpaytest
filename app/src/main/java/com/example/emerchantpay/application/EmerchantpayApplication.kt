@@ -2,8 +2,8 @@ package com.example.emerchantpay.application
 
 import android.app.Application
 import com.example.emerchantpay.account.di.accountModule
-import com.example.emerchantpay.data.di.retrofitModule
-import com.example.emerchantpay.data.di.roomModule
+import com.example.emerchantpay.common.di.retrofitModule
+import com.example.emerchantpay.common.di.roomModule
 import com.example.emerchantpay.repository.di.repositoryModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin

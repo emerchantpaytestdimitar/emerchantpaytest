@@ -10,8 +10,8 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
-import com.example.emerchantpay.data.di.AUTHENTICATION_URL
-import com.example.emerchantpay.data.di.REDIRECT_URL
+import com.example.emerchantpay.common.di.AUTHENTICATION_URL
+import com.example.emerchantpay.common.di.REDIRECT_URL
 import com.example.emerchantpay.data.remote.CLIENT_ID
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.FragmentLoginBinding

@@ -1,3 +1,5 @@
+package com.example.emerchantpay.common
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
