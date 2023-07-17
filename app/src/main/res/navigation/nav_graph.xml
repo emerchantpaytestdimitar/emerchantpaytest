@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/repositoryFragment"
-        android:name="RepositoryFragment"
+        android:name="RepositoriesFragment"
         android:label="RepositoryFragment">
         <action
             android:id="@+id/action_repositoryFragment_to_searchFragment"
@@ -36,5 +36,10 @@
         android:id="@+id/searchFragment"
         android:name="SearchFragment"
         android:label="SearchFragment" />
+
+    <fragment
+        android:id="@+id/repositoryDetailsFragment"
+        android:name="com.example.emerchantpay.repository.presentation.view.RepositoryDetailsFragment"
+        android:label="RepositoryDetailsFragment" />
 
 </navigation>

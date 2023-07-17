@@ -38,14 +38,9 @@ class Retrofit {
 
         fun getInstanceApi(): Retrofit {
 
-            val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(LoginInterceptor())
-                .build()
-
             return INSTANCE_API ?: synchronized(this) {
                 val instance = Retrofit.Builder()
                     .baseUrl(BASE_API_URL)
-                    .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 INSTANCE_API = instance

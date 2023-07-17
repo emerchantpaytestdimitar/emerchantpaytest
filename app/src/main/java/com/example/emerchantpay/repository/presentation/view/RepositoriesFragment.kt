@@ -4,25 +4,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.example.emerchantpay.repository.presentation.view.adapter.RepositoryAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
-import com.example.emerchantpaytest.R
+import com.example.emerchantpaytest.databinding.FragmentRepositoriesBinding
 import com.example.emerchantpaytest.databinding.FragmentRepositoryBinding
 
-class RepositoryFragment : Fragment() {
+class RepositoriesFragment : Fragment() {
 
     private val viewModel: RepositoryViewModel by viewModel()
     private lateinit var adapter: RepositoryAdapter
-    private lateinit var binding: FragmentRepositoryBinding
+    private lateinit var binding: FragmentRepositoriesBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentRepositoryBinding.inflate(inflater, container, false)
+        binding = FragmentRepositoriesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -36,10 +35,8 @@ class RepositoryFragment : Fragment() {
 
     private fun setupRepositoriesObserving() {
         viewModel.repositoriesLiveData.observe(viewLifecycleOwner) { repositories ->
-            Log.i("", "repositories : $repositories")
             adapter = RepositoryAdapter(repositories)
             binding.recyclerView.adapter = adapter
-            adapter.notifyDataSetChanged()
         }
     }
 }

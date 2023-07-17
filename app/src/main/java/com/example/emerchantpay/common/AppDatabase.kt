@@ -5,9 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.emerchantpay.account.domain.model.User
-import com.example.emerchantpay.repository.domain.RepositoryModel
+import com.example.emerchantpay.repository.domain.model.RepositoryModel
+import com.example.emerchantpay.repository.domain.model.RepositoryModelDb
+import com.example.emerchantpay.repository.domain.model.RepositoryOwner
 
-@Database(entities = [RepositoryModel::class, User::class], version = 1)
+@Database(entities = [RepositoryModelDb::class, User::class, RepositoryOwner::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
