@@ -9,7 +9,7 @@ import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import com.example.emerchantpay.repository.domain.model.RepositoryModelDb
 import com.example.emerchantpay.repository.domain.model.RepositoryOwner
 
-@Database(entities = [RepositoryModelDb::class, User::class, RepositoryOwner::class], version = 1)
+@Database(entities = [RepositoryModelDb::class, RepositoryOwner::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
