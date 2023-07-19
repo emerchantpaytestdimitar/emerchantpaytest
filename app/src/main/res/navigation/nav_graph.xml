@@ -17,16 +17,17 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="ProfileFragment"
-        android:label="ProfileFragment">
-        <action
-            android:id="@+id/action_profileFragment_to_repositoryFragment"
-            app:destination="@id/repositoryFragment" />
-    </fragment>
+        android:label="ProfileFragment"/>
+
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.example.emerchantpay.account.presentation.view.UserFragment"
+        android:label="UserFragment"/>
 
     <fragment
         android:id="@+id/repositoryFragment"
         android:name="RepositoriesFragment"
-        android:label="RepositoryFragment"/>
+        android:label="RepositoryFragment" />
 
     <fragment
         android:id="@+id/repositoryDetailsFragment"
@@ -37,5 +38,17 @@
         android:id="@+id/userListFragment"
         android:name="com.example.emerchantpay.account.presentation.view.UserListFragment"
         android:label="UserListFragment" />
+
+    <action
+        android:id="@+id/action_logout"
+        app:destination="@id/loginFragment"
+        app:popUpTo="@id/loginFragment"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_go_to_profile"
+        app:destination="@id/profileFragment"
+        app:popUpTo="@id/profileFragment"
+        app:popUpToInclusive="true" />
 
 </navigation>

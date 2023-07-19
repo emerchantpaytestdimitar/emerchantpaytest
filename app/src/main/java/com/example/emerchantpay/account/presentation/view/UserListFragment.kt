@@ -10,7 +10,7 @@ import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
 import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.constants.NavigationConstants
-import com.example.emerchantpay.repository.presentation.view.adapter.UsersAdapter
+import com.example.emerchantpay.account.presentation.view.adapter.UsersAdapter
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
 import com.example.emerchantpaytest.databinding.FragmentUserListBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel

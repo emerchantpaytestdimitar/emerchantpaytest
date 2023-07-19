@@ -2,19 +2,23 @@ package com.example.emerchantpay.repository.presentation.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.FragmentRepositoryBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RepositoryDetailsFragment : Fragment() {
@@ -36,6 +40,7 @@ class RepositoryDetailsFragment : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupMenu()
         setupRepositoriesObserving()
         val owner: String? = arguments?.getString("owner")
         owner?.let { ownerString ->
@@ -121,5 +126,31 @@ class RepositoryDetailsFragment : Fragment() {
             return it
         }
         return ""
+    }
+
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_repository, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.logout -> {
+                        SecureTokenStorageUtil.deleteToken(requireContext())
+                        findNavController().navigate(R.id.action_logout)
+                        true
+                    }
+
+                    R.id.profile -> {
+                        findNavController().popBackStack(R.id.profileFragment, false)
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 }

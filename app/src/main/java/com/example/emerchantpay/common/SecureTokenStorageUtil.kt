@@ -17,8 +17,12 @@ object SecureTokenStorageUtil {
     private const val ENCRYPTED_TOKEN = "EncryptedToken"
 
     private fun createKey(alias: String): SecretKey {
-        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
-        val keyGenParameterSpec = KeyGenParameterSpec.Builder(alias, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+        val keyGenerator =
+            KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+        val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+            alias,
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        )
             .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
             .build()
@@ -33,7 +37,8 @@ object SecureTokenStorageUtil {
     }
 
     private fun encrypt(secretKey: SecretKey, token: String): Pair<String, String> {
-        val cipher = Cipher.getInstance("${KeyProperties.KEY_ALGORITHM_AES}/${KeyProperties.BLOCK_MODE_CBC}/${KeyProperties.ENCRYPTION_PADDING_PKCS7}")
+        val cipher =
+            Cipher.getInstance("${KeyProperties.KEY_ALGORITHM_AES}/${KeyProperties.BLOCK_MODE_CBC}/${KeyProperties.ENCRYPTION_PADDING_PKCS7}")
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
         val iv = Base64.encodeToString(cipher.iv, Base64.DEFAULT)
         val ciphertext = cipher.doFinal(token.toByteArray(Charsets.UTF_8))
@@ -42,8 +47,13 @@ object SecureTokenStorageUtil {
     }
 
     private fun decrypt(secretKey: SecretKey, iv: String, encryptedToken: String): String {
-        val cipher = Cipher.getInstance("${KeyProperties.KEY_ALGORITHM_AES}/${KeyProperties.BLOCK_MODE_CBC}/${KeyProperties.ENCRYPTION_PADDING_PKCS7}")
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, IvParameterSpec(Base64.decode(iv, Base64.DEFAULT)))
+        val cipher =
+            Cipher.getInstance("${KeyProperties.KEY_ALGORITHM_AES}/${KeyProperties.BLOCK_MODE_CBC}/${KeyProperties.ENCRYPTION_PADDING_PKCS7}")
+        cipher.init(
+            Cipher.DECRYPT_MODE,
+            secretKey,
+            IvParameterSpec(Base64.decode(iv, Base64.DEFAULT))
+        )
         val ciphertext = Base64.decode(encryptedToken, Base64.DEFAULT)
         val decryptedTokenBytes = cipher.doFinal(ciphertext)
         return String(decryptedTokenBytes, Charsets.UTF_8)
@@ -68,5 +78,12 @@ object SecureTokenStorageUtil {
         } else {
             null
         }
+    }
+
+    fun deleteToken(context: Context) {
+        val prefsEditor = context.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE).edit()
+        prefsEditor.remove(TOKEN_IV)
+        prefsEditor.remove(ENCRYPTED_TOKEN)
+        prefsEditor.apply()
     }
 }

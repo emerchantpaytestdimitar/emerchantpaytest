@@ -1,4 +1,4 @@
-package com.example.emerchantpay.repository.presentation.view.adapter
+package com.example.emerchantpay.account.presentation.view.adapter
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.emerchantpay.account.domain.model.User
-import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.ItemRepositoryBinding
 
-class UsersViewHolder (private val binding: ItemRepositoryBinding) : RecyclerView.ViewHolder(binding.root) {
+class UsersViewHolder(private val binding: ItemRepositoryBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(user: User?) {
         binding.tvName.text = user?.login
@@ -19,7 +19,7 @@ class UsersViewHolder (private val binding: ItemRepositoryBinding) : RecyclerVie
         binding.root.setOnClickListener {
             val bundle = Bundle()
             bundle.putParcelable("user", user)
-            it.findNavController().navigate(R.id.profileFragment, bundle)
+            it.findNavController().navigate(R.id.userFragment, bundle)
         }
     }
 

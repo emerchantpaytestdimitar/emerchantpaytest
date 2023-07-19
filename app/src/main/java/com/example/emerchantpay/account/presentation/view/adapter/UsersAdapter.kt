@@ -1,4 +1,4 @@
-package com.example.emerchantpay.repository.presentation.view.adapter
+package com.example.emerchantpay.account.presentation.view.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
