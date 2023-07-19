@@ -1,19 +1,20 @@
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import com.example.emerchantpay.common.SecureTokenStorageUtil
+import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import com.example.emerchantpay.repository.presentation.view.adapter.RepositoryAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
 import com.example.emerchantpaytest.databinding.FragmentRepositoriesBinding
-import com.example.emerchantpaytest.databinding.FragmentRepositoryBinding
 
 class RepositoriesFragment : Fragment() {
 
     private val viewModel: RepositoryViewModel by viewModel()
-    private lateinit var adapter: RepositoryAdapter
+    private lateinit var repositoriesAdapter: RepositoryAdapter
     private lateinit var binding: FragmentRepositoriesBinding
 
     override fun onCreateView(
@@ -27,16 +28,44 @@ class RepositoriesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupRepositoriesObserving()
+        setupSearch()
         val username: String? = arguments?.getString("username")
         username?.let {
-            viewModel.getRepositoriesForUser(it)
+            SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
+                viewModel.getRepositoriesForUser(user = it, token = token)
+            }
         }
+    }
+
+    private fun setupSearch() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
+                    viewModel.searchRepositories(query = query, token = token)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+        })
     }
 
     private fun setupRepositoriesObserving() {
         viewModel.repositoriesLiveData.observe(viewLifecycleOwner) { repositories ->
-            adapter = RepositoryAdapter(repositories)
-            binding.recyclerView.adapter = adapter
+            loadRepositoriesIntoAdapter(repositories)
         }
+        viewModel.searchRepositoriesLiveData.observe(viewLifecycleOwner) { repositories ->
+            loadRepositoriesIntoAdapter(repositories)
+        }
+    }
+
+    private fun loadRepositoriesIntoAdapter(repositories: List<RepositoryModel>) {
+        repositoriesAdapter = RepositoryAdapter(repositories)
+        binding.recyclerView.apply {
+            adapter = repositoriesAdapter
+        }
+        repositoriesAdapter.notifyDataSetChanged()
     }
 }

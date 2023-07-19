@@ -15,6 +15,10 @@ class RepositoryViewModel(private val repository: Repository) : ViewModel() {
         MutableLiveData()
     val repositoriesLiveData: LiveData<List<RepositoryModel>> get() = repositoriesMutableLiveData
 
+    private val searchRepositoriesMutableLiveData: MutableLiveData<List<RepositoryModel>> =
+        MutableLiveData()
+    val searchRepositoriesLiveData: LiveData<List<RepositoryModel>> get() = searchRepositoriesMutableLiveData
+
     private val repositoryMutableLiveData: MutableLiveData<RepositoryModel> = MutableLiveData()
     val repositoryLiveData: LiveData<RepositoryModel> get() = repositoryMutableLiveData
 
@@ -30,8 +34,13 @@ class RepositoryViewModel(private val repository: Repository) : ViewModel() {
     private val checkIfRepoIsStarredMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val checkIfRepoIsStarredLiveData: LiveData<Boolean> get() = checkIfRepoIsStarredMutableLiveData
 
-    fun getRepositoriesForUser(user: String) = viewModelScope.launch {
-        repositoriesMutableLiveData.value = repository.getRepositoriesForUser(user)
+    fun getRepositoriesForUser(user: String, token: String) = viewModelScope.launch {
+        repositoriesMutableLiveData.value = repository.getRepositoriesForUser(username = user, token = token)
+    }
+
+    fun searchRepositories(query: String, token: String) = viewModelScope.launch {
+        searchRepositoriesMutableLiveData.value =
+            repository.searchRepositories(query = query, token = token)
     }
 
     fun getRepository(owner: String, repo: String) = viewModelScope.launch {

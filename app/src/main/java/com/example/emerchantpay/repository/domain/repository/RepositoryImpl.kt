@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.repository.data.remote.RepositoryService
 import com.example.emerchantpay.repository.domain.model.RepositoryModel
+import com.example.emerchantpay.repository.domain.model.RepositorySearchResponse
 import okhttp3.Credentials
 import retrofit2.Call
 import retrofit2.Callback
@@ -11,8 +12,11 @@ import retrofit2.Response
 
 class RepositoryImpl(private val repositoryService: RepositoryService) : Repository {
 
-    override suspend fun getRepositoriesForUser(username: String): List<RepositoryModel> {
-        return repositoryService.getRepositories(username)
+    override suspend fun getRepositoriesForUser(
+        username: String,
+        token: String
+    ): List<RepositoryModel> {
+        return repositoryService.getRepositories(user = username, token = token)
     }
 
     override suspend fun getRepository(owner: String, repo: String): RepositoryModel {
@@ -67,6 +71,13 @@ class RepositoryImpl(private val repositoryService: RepositoryService) : Reposit
         } else {
             false
         }
+    }
+
+    override suspend fun searchRepositories(
+        token: String,
+        query: String
+    ): List<RepositoryModel> {
+        return repositoryService.searchRepositories(query = query, token = "Bearer $token").items
     }
 
 }
