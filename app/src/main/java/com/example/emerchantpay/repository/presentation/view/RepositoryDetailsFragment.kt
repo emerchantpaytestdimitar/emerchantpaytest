@@ -12,6 +12,9 @@ import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.FragmentRepositoryBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RepositoryDetailsFragment : Fragment() {
@@ -40,7 +43,9 @@ class RepositoryDetailsFragment : Fragment() {
             arguments?.getString("repo")?.let { repo ->
                 this.repoName = repo
                 viewModel.getRepository(owner, repo)
-                setClickListeners()
+                SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
+                    viewModel.checkIfRepoIsStarred(owner = owner, repo = repo, token = token)
+                }
             }
         }
     }
@@ -72,6 +77,11 @@ class RepositoryDetailsFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+        }
+
+        viewModel.checkIfRepoIsStarredLiveData.observe(viewLifecycleOwner) {
+            binding.tbStar.isChecked = it
+            setClickListeners()
         }
     }
 

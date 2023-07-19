@@ -27,6 +27,9 @@ class RepositoryViewModel(private val repository: Repository) : ViewModel() {
     private val unStarRepoMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val unsStarRepoLiveData: LiveData<Boolean> get() = unStarRepoMutableLiveData
 
+    private val checkIfRepoIsStarredMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val checkIfRepoIsStarredLiveData: LiveData<Boolean> get() = checkIfRepoIsStarredMutableLiveData
+
     fun getRepositoriesForUser(user: String) = viewModelScope.launch {
         repositoriesMutableLiveData.value = repository.getRepositoriesForUser(user)
     }
@@ -43,10 +46,18 @@ class RepositoryViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun starRepo(owner: String, repo: String, token: String) = viewModelScope.launch {
-        starRepoMutableLiveData.value = repository.starRepo(owner = owner, repo = repo, token)
+        starRepoMutableLiveData.value =
+            repository.starRepo(owner = owner, repo = repo, token = token)
     }
 
     fun unStarRepo(owner: String, repo: String, token: String) = viewModelScope.launch {
-        unStarRepoMutableLiveData.value = repository.unStarRepo(owner = owner, repo = repo, token)
+        unStarRepoMutableLiveData.value =
+            repository.unStarRepo(owner = owner, repo = repo, token = token)
     }
+
+    fun checkIfRepoIsStarred(owner: String, repo: String, token: String) = viewModelScope.launch {
+        checkIfRepoIsStarredMutableLiveData.value =
+            repository.checkIfRepoIsStarred(owner = owner, repo = repo, token = token)
+    }
+
 }

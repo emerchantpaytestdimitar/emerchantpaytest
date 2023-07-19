@@ -31,6 +31,14 @@ interface RepositoryService {
     ): Response<Void>
 
     @Headers("Accept: application/json")
+    @GET("user/starred/{owner}/{repo}")
+    suspend fun checkIfRepoIsStarred(
+        @Header("Authorization") token: String,
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Response<Void>
+
+    @Headers("Accept: application/json")
     @GET("users/{user}/starred")
     suspend fun getRepositories(@Path("user") user: String): List<RepositoryModel>
 

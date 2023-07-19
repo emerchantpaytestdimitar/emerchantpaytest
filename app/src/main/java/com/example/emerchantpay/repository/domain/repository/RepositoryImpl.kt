@@ -53,4 +53,20 @@ class RepositoryImpl(private val repositoryService: RepositoryService) : Reposit
         return response.isSuccessful
     }
 
+    override suspend fun checkIfRepoIsStarred(token: String, owner: String, repo: String): Boolean {
+        val response =
+            repositoryService.checkIfRepoIsStarred(
+                owner = owner,
+                repo = repo,
+                token = "Bearer $token"
+            )
+        return if (response.code() == 204) {
+            true
+        } else if (response.code() == 404) {
+            false
+        } else {
+            false
+        }
+    }
+
 }
