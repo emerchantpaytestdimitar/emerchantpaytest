@@ -12,9 +12,9 @@ import com.example.emerchantpaytest.databinding.ItemRepositoryBinding
 
 class UsersViewHolder (private val binding: ItemRepositoryBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(user: User) {
-        binding.tvName.text = user.login
-        binding.tvId.text = user.id.toString()
+    fun bind(user: User?) {
+        binding.tvName.text = user?.login
+        binding.tvId.text = user?.id.toString()
 
         binding.root.setOnClickListener {
             val bundle = Bundle()

@@ -42,4 +42,9 @@
         android:name="com.example.emerchantpay.repository.presentation.view.RepositoryDetailsFragment"
         android:label="RepositoryDetailsFragment" />
 
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.example.emerchantpay.repository.presentation.view.UserListFragment"
+        android:label="UserListFragment" />
+
 </navigation>

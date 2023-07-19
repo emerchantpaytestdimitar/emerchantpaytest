@@ -57,7 +57,9 @@ class UserListFragment : Fragment() {
 
     private fun setupLiveDataObserving() {
         viewModel.contributorsLiveData.observe(viewLifecycleOwner) { contributors ->
-            loadUsersIntoAdapter(contributors)
+            contributors?.let {
+                loadUsersIntoAdapter(it)
+            }
         }
 
         viewModel.listFollowersLiveData.observe(viewLifecycleOwner) { followers ->
@@ -65,7 +67,7 @@ class UserListFragment : Fragment() {
         }
     }
 
-    private fun loadUsersIntoAdapter(users: List<User>) {
+    private fun loadUsersIntoAdapter(users: List<User?>) {
         usersAdapter = UsersAdapter(users)
         binding.recyclerView.apply {
             adapter = usersAdapter

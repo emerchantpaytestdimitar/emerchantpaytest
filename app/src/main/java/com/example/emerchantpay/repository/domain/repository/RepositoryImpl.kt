@@ -1,9 +1,9 @@
 package com.example.emerchantpay.repository.domain.repository
 
+import android.util.Log
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.repository.data.remote.RepositoryService
 import com.example.emerchantpay.repository.domain.model.RepositoryModel
-import retrofit2.http.Path
 
 class RepositoryImpl(private val repositoryService: RepositoryService) : Repository {
 
@@ -17,11 +17,16 @@ class RepositoryImpl(private val repositoryService: RepositoryService) : Reposit
 
     override suspend fun listRepoContributors(
         owner: String, repo: String
-    ): List<User> {
-        val list = repositoryService.listRepoContributors(owner = owner, repo = repo)
-        return if (!list.isNullOrEmpty()) {
-            list
-        } else listOf()
+    ): List<User?>? {
+        return try {
+            val list = repositoryService.listRepoContributors(owner = owner, repo = repo)
+            if (!list.isNullOrEmpty()) {
+                list
+            } else listOf()
+        } catch (e: KotlinNullPointerException) {
+            Log.e(e.message, e.toString())
+            listOf()
+        }
     }
 
     override suspend fun listFollowers(user: String): List<User> {

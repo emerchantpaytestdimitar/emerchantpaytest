@@ -1,5 +1,6 @@
 package com.example.emerchantpay.repository.data.remote
 
+import androidx.annotation.Nullable
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import retrofit2.http.GET

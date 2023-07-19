@@ -9,6 +9,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.emerchantpay.account.data.ACCESS_TOKEN
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
 import com.example.emerchantpay.common.di.AUTHENTICATION_URL
 import com.example.emerchantpay.common.di.REDIRECT_URL

@@ -41,8 +41,8 @@ data class User(
     @SerializedName(UserJsonKeys.TWITTER_USERNAME) @ColumnInfo(name = UserRoomConstants.TWITTER_USERNAME) val twitterUsername: String? = "",
     @SerializedName(UserJsonKeys.PUBLIC_REPOS) @ColumnInfo(name = UserRoomConstants.PUBLIC_REPOS) val publicRepos: Int = 0,
     @SerializedName(UserJsonKeys.PUBLIC_GISTS) @ColumnInfo(name = UserRoomConstants.PUBLIC_GISTS) val publicGists: Int = 0,
-    @SerializedName(UserJsonKeys.FOLLOWERS) @ColumnInfo(name = UserRoomConstants.FOLLOWERS) val followers: Int = -1,
-    @SerializedName(UserJsonKeys.FOLLOWING) @ColumnInfo(name = UserRoomConstants.FOLLOWING) val following: Int = -1,
+    @SerializedName(UserJsonKeys.FOLLOWERS) @ColumnInfo(name = UserRoomConstants.FOLLOWERS) val followers: Int = 0,
+    @SerializedName(UserJsonKeys.FOLLOWING) @ColumnInfo(name = UserRoomConstants.FOLLOWING) val following: Int = 0,
     @SerializedName(UserJsonKeys.CREATED_AT) @ColumnInfo(name = UserRoomConstants.CREATED_AT) val createdAt: String = "",
     @SerializedName(UserJsonKeys.UPDATED_AT) @ColumnInfo(name = UserRoomConstants.UPDATED_AT) val updatedAt: String = ""
 ) : Parcelable
