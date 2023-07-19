@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
 import com.example.emerchantpaytest.R
@@ -48,6 +50,29 @@ class RepositoryDetailsFragment : Fragment() {
             binding.tvRepositoryName.text = repository.name
             binding.tvOwner.text = repository.owner.login
         }
+
+        viewModel.starRepoLiveData.observe(viewLifecycleOwner) {
+            if (it) {
+                Toast.makeText(requireContext(), "REPO SUCCESSFULLY STARRED", Toast.LENGTH_LONG)
+                    .show()
+            } else {
+                Toast.makeText(requireContext(), "REPO NOT SUCCESSFULLY STARRED", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+
+        viewModel.unsStarRepoLiveData.observe(viewLifecycleOwner) {
+            if (it) {
+                Toast.makeText(requireContext(), "REPO SUCCESSFULLY UNSTARRED", Toast.LENGTH_LONG)
+                    .show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "REPO NOT SUCCESSFULLY UNSTARRED",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     private fun setClickListeners() {
@@ -60,6 +85,24 @@ class RepositoryDetailsFragment : Fragment() {
             bundle.putString("repoName", getString("repo"))
             bundle.putString("ownerName", getString("owner"))
             findNavController().navigate(R.id.userListFragment, bundle)
+        }
+
+        binding.tbStar.setOnCheckedChangeListener { _, isChecked ->
+            SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
+                if (isChecked) {
+                    viewModel.starRepo(
+                        repo = getString("repo"),
+                        owner = getString("owner"),
+                        token = token
+                    )
+                } else {
+                    viewModel.unStarRepo(
+                        repo = getString("repo"),
+                        owner = getString("owner"),
+                        token = token
+                    )
+                }
+            }
         }
     }
 

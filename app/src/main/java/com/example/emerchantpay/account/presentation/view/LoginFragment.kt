@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.emerchantpay.account.data.remote.ACCESS_TOKEN
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
+import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.di.AUTHENTICATION_URL
 import com.example.emerchantpay.common.di.REDIRECT_URL
 import com.example.emerchantpay.data.remote.CLIENT_ID
@@ -39,6 +40,7 @@ class LoginFragment : Fragment() {
     private fun setupWebView() {
         val url = Uri.parse(AUTHENTICATION_URL).buildUpon()
             .appendQueryParameter("client_id", CLIENT_ID)
+            .appendQueryParameter("scope", "user,repo, public_repo")
             .build()
             .toString()
 
@@ -71,6 +73,7 @@ class LoginFragment : Fragment() {
 
     private fun setupTokenObserving() {
         viewModel.accessTokenLiveData.observe(viewLifecycleOwner) { accessTokenModel ->
+            SecureTokenStorageUtil.storeToken(requireContext(), accessTokenModel)
             setupLoginObserving(accessTokenModel)
             viewModel.performLogin(accessTokenModel)
         }

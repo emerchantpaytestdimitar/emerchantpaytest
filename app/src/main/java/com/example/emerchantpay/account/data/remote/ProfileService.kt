@@ -1,6 +1,7 @@
 package com.example.emerchantpay.account.data.remote
 
 import com.example.emerchantpay.account.domain.model.User
+import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -26,4 +27,8 @@ interface ProfileService {
         @Path("user") user: String?,
         @Header("Authorization") token: String
     ): List<User>
+
+    @Headers("Accept: application/json")
+    @GET("users/{user}/starred")
+    fun listStarredRepositories(@Path("user") user: String): List<RepositoryModel>
 }

@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.emerchantpay.account.domain.model.User
+import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.FragmentProfileBinding
@@ -71,7 +72,6 @@ class ProfileFragment : Fragment() {
                 NavigationConstants.NAVIGATION_CONSTANT_FOLLOWERS
             )
             bundle.putString("ownerName", user.login)
-            bundle.putString("token", token)
             findNavController().navigate(R.id.userListFragment, bundle)
         }
 
@@ -82,7 +82,6 @@ class ProfileFragment : Fragment() {
                 NavigationConstants.NAVIGATION_CONSTANT_FOLLOWING
             )
             bundle.putString("ownerName", user.login)
-            bundle.putString("token", token)
             findNavController().navigate(R.id.userListFragment, bundle)
         }
     }

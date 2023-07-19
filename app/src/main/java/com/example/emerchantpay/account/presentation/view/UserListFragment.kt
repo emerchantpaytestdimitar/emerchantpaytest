@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
+import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpay.repository.presentation.view.adapter.UsersAdapter
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
@@ -40,11 +41,10 @@ class UserListFragment : Fragment() {
             when (it) {
                 NavigationConstants.NAVIGATION_CONSTANT_FOLLOWERS -> {
                     arguments?.getString("ownerName")?.let { ownerName ->
-                        arguments?.getString("token")?.let { token ->
+                        SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
                             viewModel.listFollowers(user = ownerName, token = token)
                         }
                     }
-
                 }
 
                 NavigationConstants.NAVIGATION_CONSTANT_CONTRIBUTORS -> {
@@ -57,7 +57,8 @@ class UserListFragment : Fragment() {
 
                 NavigationConstants.NAVIGATION_CONSTANT_FOLLOWING -> {
                     arguments?.getString("ownerName")?.let { ownerName ->
-                        arguments?.getString("token")?.let { token ->
+
+                        SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
                             viewModel.listFollowing(user = ownerName, token = token)
                         }
                     }

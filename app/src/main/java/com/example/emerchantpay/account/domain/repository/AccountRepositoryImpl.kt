@@ -40,11 +40,11 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun listFollowers(user: String, token: String): List<User> {
-        return profileService.listFollowers(user, token)
+        return profileService.listFollowers(user, "Bearer $token")
     }
 
     override suspend fun listFollowing(user: String, token: String): List<User> {
-        return profileService.listFollowing(user = user, token = token)
+        return profileService.listFollowing(user = user, token = "Bearer $token")
     }
 
 

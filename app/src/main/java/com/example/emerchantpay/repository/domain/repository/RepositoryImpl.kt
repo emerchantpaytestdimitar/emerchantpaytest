@@ -4,6 +4,10 @@ import android.util.Log
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.repository.data.remote.RepositoryService
 import com.example.emerchantpay.repository.domain.model.RepositoryModel
+import okhttp3.Credentials
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RepositoryImpl(private val repositoryService: RepositoryService) : Repository {
 
@@ -27,6 +31,26 @@ class RepositoryImpl(private val repositoryService: RepositoryService) : Reposit
             Log.e(e.message, e.toString())
             listOf()
         }
+    }
+
+    override suspend fun starRepo(owner: String, repo: String, token: String): Boolean {
+        val response =
+            repositoryService.starRepo(
+                owner = owner,
+                repo = repo,
+                token = "Bearer $token"
+            )
+        return response.isSuccessful
+    }
+
+    override suspend fun unStarRepo(owner: String, repo: String, token: String): Boolean {
+        val response =
+            repositoryService.unStarRepo(
+                owner = owner,
+                repo = repo,
+                token = "Bearer $token"
+            )
+        return response.isSuccessful
     }
 
 }
