@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
@@ -34,6 +35,7 @@ class UserListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupLiveDataObserving()
         initDataLoading()
+        setupSearch()
     }
 
     private fun initDataLoading() {
@@ -69,6 +71,21 @@ class UserListFragment : Fragment() {
         }
     }
 
+    private fun setupSearch() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
+                    viewModel.searchUsers(query = query, token = token)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+        })
+    }
+
     private fun setupLiveDataObserving() {
         repositoryViewModel.contributorsLiveData.observe(viewLifecycleOwner) { contributors ->
             contributors?.let {
@@ -82,6 +99,10 @@ class UserListFragment : Fragment() {
 
         viewModel.listFollowingsLiveData.observe(viewLifecycleOwner) { followers ->
             loadUsersIntoAdapter(followers)
+        }
+
+        viewModel.searchUsersLiveData.observe(viewLifecycleOwner) { searchedUsers ->
+            loadUsersIntoAdapter(searchedUsers)
         }
     }
 

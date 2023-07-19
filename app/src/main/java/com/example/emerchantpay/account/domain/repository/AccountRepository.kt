@@ -1,8 +1,6 @@
 package com.example.emerchantpay.account.domain.repository
 
 import com.example.emerchantpay.account.domain.model.User
-import retrofit2.http.Header
-import retrofit2.http.Path
 
 interface AccountRepository {
 
@@ -16,4 +14,5 @@ interface AccountRepository {
         token: String
     ): List<User>
 
+    suspend fun searchUsers(query: String, token: String): List<User>
 }

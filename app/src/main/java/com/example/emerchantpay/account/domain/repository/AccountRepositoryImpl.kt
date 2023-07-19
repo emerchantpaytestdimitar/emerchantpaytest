@@ -47,5 +47,8 @@ class AccountRepositoryImpl(
         return profileService.listFollowing(user = user, token = "Bearer $token")
     }
 
+    override suspend fun searchUsers(query: String, token: String): List<User> {
+        return profileService.searchUsers(query = query, token = "Bearer $token").items
+    }
 
 }
