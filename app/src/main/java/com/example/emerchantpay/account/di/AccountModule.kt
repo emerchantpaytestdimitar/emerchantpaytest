@@ -1,7 +1,7 @@
 package com.example.emerchantpay.account.di
 
 import com.example.emerchantpay.account.data.remote.ProfileService
-import com.example.emerchantpay.account.data.TokenService
+import com.example.emerchantpay.account.data.remote.TokenService
 import com.example.emerchantpay.account.domain.repository.AccountRepository
 import com.example.emerchantpay.account.domain.repository.AccountRepositoryImpl
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel

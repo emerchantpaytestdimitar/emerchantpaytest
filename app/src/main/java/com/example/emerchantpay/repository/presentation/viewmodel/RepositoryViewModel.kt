@@ -18,9 +18,6 @@ class RepositoryViewModel(private val repository: Repository) : ViewModel() {
     private val repositoryMutableLiveData: MutableLiveData<RepositoryModel> = MutableLiveData()
     val repositoryLiveData: LiveData<RepositoryModel> get() = repositoryMutableLiveData
 
-    private val listFollowersMutableLiveData: MutableLiveData<List<User>> = MutableLiveData()
-    val listFollowersLiveData: LiveData<List<User>> get() = listFollowersMutableLiveData
-
     private val contributorsMutableLiveData: MutableLiveData<List<User?>?> = MutableLiveData()
     val contributorsLiveData: LiveData<List<User?>?> get() = contributorsMutableLiveData
     fun getRepositoriesForUser(user: String) = viewModelScope.launch {
@@ -35,9 +32,5 @@ class RepositoryViewModel(private val repository: Repository) : ViewModel() {
         owner: String, repo: String
     ) = viewModelScope.launch {
         contributorsMutableLiveData.value = repository.listRepoContributors(owner = owner, repo = repo)
-    }
-
-    fun listFollowers(user: String) = viewModelScope.launch {
-        listFollowersMutableLiveData.value = repository.listFollowers(user)
     }
 }

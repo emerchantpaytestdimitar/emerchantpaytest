@@ -9,7 +9,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.emerchantpay.account.data.ACCESS_TOKEN
+import com.example.emerchantpay.account.data.remote.ACCESS_TOKEN
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
 import com.example.emerchantpay.common.di.AUTHENTICATION_URL
 import com.example.emerchantpay.common.di.REDIRECT_URL
@@ -33,7 +33,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupTokenObserving()
-        setupLoginObserving()
         setupWebView()
     }
 
@@ -72,14 +71,16 @@ class LoginFragment : Fragment() {
 
     private fun setupTokenObserving() {
         viewModel.accessTokenLiveData.observe(viewLifecycleOwner) { accessTokenModel ->
+            setupLoginObserving(accessTokenModel)
             viewModel.performLogin(accessTokenModel)
         }
     }
 
-    private fun setupLoginObserving() {
+    private fun setupLoginObserving(accessTokenModel: String) {
         viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
             val bundle: Bundle = Bundle()
             bundle.putParcelable("user", user)
+            bundle.putString("token", accessTokenModel)
             findNavController().navigate(R.id.profileFragment, bundle)
         }
     }

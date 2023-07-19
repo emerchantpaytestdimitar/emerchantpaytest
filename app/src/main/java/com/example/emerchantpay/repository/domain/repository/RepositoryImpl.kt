@@ -29,8 +29,4 @@ class RepositoryImpl(private val repositoryService: RepositoryService) : Reposit
         }
     }
 
-    override suspend fun listFollowers(user: String): List<User> {
-        return repositoryService.listFollowers(user)
-    }
-
 }

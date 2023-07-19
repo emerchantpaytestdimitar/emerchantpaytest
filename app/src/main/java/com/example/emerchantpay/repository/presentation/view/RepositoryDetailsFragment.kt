@@ -3,11 +3,10 @@ package com.example.emerchantpay.repository.presentation.view
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.emerchantpay.repository.presentation.RepositoryNavigationConstants
+import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.FragmentRepositoryBinding
@@ -51,27 +50,23 @@ class RepositoryDetailsFragment : Fragment() {
         }
     }
 
-
     private fun setClickListeners() {
-        binding.followers.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(
-                RepositoryNavigationConstants.NAVIGATION_CONSTANT_KEY,
-                RepositoryNavigationConstants.NAVIGATION_CONSTANT_FOLLOWERS
-            )
-            bundle.putString("ownerName", ownerName)
-            findNavController().navigate(R.id.userListFragment, bundle)
-        }
-
         binding.tvContributors.setOnClickListener {
             val bundle = Bundle()
             bundle.putString(
-                RepositoryNavigationConstants.NAVIGATION_CONSTANT_KEY,
-                RepositoryNavigationConstants.NAVIGATION_CONSTANT_CONTRIBUTORS
+                NavigationConstants.NAVIGATION_CONSTANT_KEY,
+                NavigationConstants.NAVIGATION_CONSTANT_CONTRIBUTORS
             )
-            bundle.putString("repoName", repoName)
-            bundle.putString("ownerName", ownerName)
+            bundle.putString("repoName", getString("repo"))
+            bundle.putString("ownerName", getString("owner"))
             findNavController().navigate(R.id.userListFragment, bundle)
         }
+    }
+
+    private fun getString(key: String): String {
+        arguments?.getString(key)?.let {
+            return it
+        }
+        return ""
     }
 }

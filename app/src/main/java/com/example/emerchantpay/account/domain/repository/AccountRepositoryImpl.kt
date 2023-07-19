@@ -1,7 +1,7 @@
 package com.example.emerchantpay.account.domain.repository
 
 import com.example.emerchantpay.account.data.remote.ProfileService
-import com.example.emerchantpay.account.data.TokenService
+import com.example.emerchantpay.account.data.remote.TokenService
 import com.example.emerchantpay.account.domain.model.AccessTokenModel
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.data.remote.CLIENT_ID
@@ -10,7 +10,10 @@ import com.example.emerchantpay.data.remote.REDIRECT_URL
 import okhttp3.Credentials
 import java.io.IOException
 
-class AccountRepositoryImpl(private val service: TokenService, private val loginService: ProfileService): AccountRepository {
+class AccountRepositoryImpl(
+    private val service: TokenService,
+    private val profileService: ProfileService
+) : AccountRepository {
 
     override suspend fun getToken(code: String): String? {
 
@@ -28,12 +31,20 @@ class AccountRepositoryImpl(private val service: TokenService, private val login
     }
 
     override suspend fun performLogin(token: String): User? {
-        val response = loginService.performLogin(Credentials.basic("", token))
-         if (response.isSuccessful) {
-            return  response.body()
+        val response = profileService.performLogin(Credentials.basic("", token))
+        if (response.isSuccessful) {
+            return response.body()
         } else {
-             return  null
+            return null
         }
+    }
+
+    override suspend fun listFollowers(user: String, token: String): List<User> {
+        return profileService.listFollowers(user, token)
+    }
+
+    override suspend fun listFollowing(user: String, token: String): List<User> {
+        return profileService.listFollowing(user = user, token = token)
     }
 
 

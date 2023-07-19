@@ -18,6 +18,11 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
     private val userMutableLiveData: MutableLiveData<User> = MutableLiveData()
     val userLiveData: LiveData<User> get() = userMutableLiveData
 
+    private val listFollowersMutableLiveData: MutableLiveData<List<User>> = MutableLiveData()
+    val listFollowersLiveData: LiveData<List<User>> get() = listFollowersMutableLiveData
+
+    private val listFollowingMutableLiveData: MutableLiveData<List<User>> = MutableLiveData()
+    val listFollowingsLiveData: LiveData<List<User>> get() = listFollowingMutableLiveData
     fun getToken(code: String) = viewModelScope.launch {
         try {
             val token = repository.getToken(code)
@@ -34,5 +39,13 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
         user?.let {
             userMutableLiveData.value = it
         }
+    }
+
+    fun listFollowers(user: String, token: String) = viewModelScope.launch {
+        listFollowersMutableLiveData.value = repository.listFollowers(user, token)
+    }
+
+    fun listFollowing(user: String, token: String)  = viewModelScope.launch {
+        listFollowingMutableLiveData.value = repository.listFollowing(user, token)
     }
 }

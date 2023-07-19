@@ -1,4 +1,4 @@
-package com.example.emerchantpay.repository.presentation.view
+package com.example.emerchantpay.account.presentation.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.emerchantpay.account.domain.model.User
-import com.example.emerchantpay.repository.presentation.RepositoryNavigationConstants
+import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
+import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpay.repository.presentation.view.adapter.UsersAdapter
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
 import com.example.emerchantpaytest.databinding.FragmentUserListBinding
@@ -14,7 +15,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment() {
 
-    private val viewModel: RepositoryViewModel by viewModel()
+    private val viewModel: AccountViewModel by viewModel()
+    private val repositoryViewModel: RepositoryViewModel by viewModel()
+
     private lateinit var usersAdapter: UsersAdapter
     private lateinit var binding: FragmentUserListBinding
 
@@ -33,19 +36,29 @@ class UserListFragment : Fragment() {
     }
 
     private fun initDataLoading() {
-        arguments?.getString(RepositoryNavigationConstants.NAVIGATION_CONSTANT_KEY)?.let {
+        arguments?.getString(NavigationConstants.NAVIGATION_CONSTANT_KEY)?.let {
             when (it) {
-                RepositoryNavigationConstants.NAVIGATION_CONSTANT_FOLLOWERS -> {
+                NavigationConstants.NAVIGATION_CONSTANT_FOLLOWERS -> {
                     arguments?.getString("ownerName")?.let { ownerName ->
-                        viewModel.listFollowers(ownerName)
+                        arguments?.getString("token")?.let { token ->
+                            viewModel.listFollowers(user = ownerName, token = token)
+                        }
                     }
 
                 }
 
-                RepositoryNavigationConstants.NAVIGATION_CONSTANT_CONTRIBUTORS -> {
+                NavigationConstants.NAVIGATION_CONSTANT_CONTRIBUTORS -> {
                     arguments?.getString("repoName")?.let { repo ->
                         arguments?.getString("ownerName")?.let { ownerName ->
-                            viewModel.listRepoContributors(owner = ownerName, repo = repo)
+                            repositoryViewModel.listRepoContributors(owner = ownerName, repo = repo)
+                        }
+                    }
+                }
+
+                NavigationConstants.NAVIGATION_CONSTANT_FOLLOWING -> {
+                    arguments?.getString("ownerName")?.let { ownerName ->
+                        arguments?.getString("token")?.let { token ->
+                            viewModel.listFollowing(user = ownerName, token = token)
                         }
                     }
                 }
@@ -56,13 +69,17 @@ class UserListFragment : Fragment() {
     }
 
     private fun setupLiveDataObserving() {
-        viewModel.contributorsLiveData.observe(viewLifecycleOwner) { contributors ->
+        repositoryViewModel.contributorsLiveData.observe(viewLifecycleOwner) { contributors ->
             contributors?.let {
                 loadUsersIntoAdapter(it)
             }
         }
 
         viewModel.listFollowersLiveData.observe(viewLifecycleOwner) { followers ->
+            loadUsersIntoAdapter(followers)
+        }
+
+        viewModel.listFollowingsLiveData.observe(viewLifecycleOwner) { followers ->
             loadUsersIntoAdapter(followers)
         }
     }

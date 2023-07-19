@@ -1,4 +1,4 @@
-package com.example.emerchantpay.account.data
+package com.example.emerchantpay.account.data.remote
 
 import com.example.emerchantpay.account.domain.model.AccessTokenModel
 import retrofit2.Response

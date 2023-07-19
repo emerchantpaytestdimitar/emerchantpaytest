@@ -12,6 +12,4 @@ interface Repository {
     suspend fun listRepoContributors(
         owner: String, repo: String
     ): List<User?>?
-
-    suspend fun listFollowers(user: String): List<User>
 }

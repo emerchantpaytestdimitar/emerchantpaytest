@@ -21,10 +21,6 @@ interface RepositoryService {
     ): RepositoryModel
 
     @Headers("Accept: application/json")
-    @GET("/users/{user}/followers")
-    suspend fun listFollowers(@Path("user") user: String?): List<User>
-
-    @Headers("Accept: application/json")
     @GET("/repos/{owner}/{repo}/contributors")
     suspend fun listRepoContributors(
         @Path("owner") owner: String?,

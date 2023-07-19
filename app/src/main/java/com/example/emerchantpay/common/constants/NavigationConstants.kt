@@ -1,8 +1,9 @@
-package com.example.emerchantpay.repository.presentation
+package com.example.emerchantpay.common.constants
 
-object RepositoryNavigationConstants {
+object NavigationConstants {
 
     const val NAVIGATION_CONSTANT_KEY = "NAVIGATION_CONSTANT_KEY"
     const val NAVIGATION_CONSTANT_FOLLOWERS = "NAVIGATION_CONSTANT_FOLLOWERS"
+    const val NAVIGATION_CONSTANT_FOLLOWING = "NAVIGATION_CONSTANT_FOLLOWING"
     const val NAVIGATION_CONSTANT_CONTRIBUTORS = "NAVIGATION_CONSTANT_CONTRIBUTORS"
 }
