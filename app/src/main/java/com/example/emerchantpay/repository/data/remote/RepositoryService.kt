@@ -42,10 +42,16 @@ interface RepositoryService {
 
     @Headers("Accept: application/json")
     @GET("users/{user}/starred")
-    suspend fun getRepositories(
+    suspend fun getRepositoriesForAuthenticatedUser(
         @Header("Authorization") token: String,
         @Path("user") user: String
-    ): List<RepositoryModel>
+    ): Response<List<RepositoryModel>>
+
+    @Headers("Accept: application/json")
+    @GET("users/{user}/starred")
+    suspend fun getRepositoriesForUnauthenticatedUser(
+        @Path("user") user: String
+    ): Response<List<RepositoryModel>>
 
     @Headers("Accept: application/json")
     @GET("repos/{owner}/{repo}")

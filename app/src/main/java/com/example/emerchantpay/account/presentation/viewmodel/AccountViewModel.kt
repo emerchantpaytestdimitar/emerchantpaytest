@@ -18,6 +18,9 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
     private val userMutableLiveData: MutableLiveData<User> = MutableLiveData()
     val userLiveData: LiveData<User> get() = userMutableLiveData
 
+    private val getUserMutableLiveData: MutableLiveData<User> = MutableLiveData()
+    val getUserLiveData: LiveData<User> get() = getUserMutableLiveData
+
     private val listFollowersMutableLiveData: MutableLiveData<List<User>> = MutableLiveData()
     val listFollowersLiveData: LiveData<List<User>> get() = listFollowersMutableLiveData
 
@@ -55,5 +58,9 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
 
     fun searchUsers(query: String, token: String) = viewModelScope.launch {
         searchUsersMutableLiveData.value = repository.searchUsers(query = query, token = token)
+    }
+
+    fun getUser(userId: String, token: String) = viewModelScope.launch {
+        getUserMutableLiveData.value = repository.getUser(userId = userId, token = token)
     }
 }

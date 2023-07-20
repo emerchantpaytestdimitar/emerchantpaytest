@@ -2,6 +2,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.example.emerchantpay.common.SecureTokenStorageUtil
@@ -30,9 +31,18 @@ class RepositoriesFragment : Fragment() {
         setupRepositoriesObserving()
         setupSearch()
         val username: String? = arguments?.getString("username")
-        username?.let {
-            SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
-                viewModel.getRepositoriesForUser(user = it, token = token)
+        username?.let { user ->
+            arguments?.getBoolean("isAuthenticated")?.let { isAuthenticated ->
+                if (isAuthenticated) {
+                    SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
+                        viewModel.getStarredRepositoriesForAuthenticatedUser(
+                            user = user,
+                            token = token
+                        )
+                    }
+                } else {
+                    viewModel.getRepositoriesForUnAuthenticatedUser(user)
+                }
             }
         }
     }
@@ -62,10 +72,17 @@ class RepositoriesFragment : Fragment() {
     }
 
     private fun loadRepositoriesIntoAdapter(repositories: List<RepositoryModel>) {
+        if (repositories.isEmpty()) {
+            displayEmptyDataToast()
+        }
         repositoriesAdapter = RepositoryAdapter(repositories)
         binding.recyclerView.apply {
             adapter = repositoriesAdapter
         }
         repositoriesAdapter.notifyDataSetChanged()
+    }
+
+    private fun displayEmptyDataToast() {
+        Toast.makeText(requireContext(), "No Repositories to Show", Toast.LENGTH_LONG).show()
     }
 }

@@ -12,11 +12,33 @@ import retrofit2.Response
 
 class RepositoryImpl(private val repositoryService: RepositoryService) : Repository {
 
-    override suspend fun getRepositoriesForUser(
+    override suspend fun getStarredRepositoriesForAuthenticatedUser(
         username: String,
         token: String
     ): List<RepositoryModel> {
-        return repositoryService.getRepositories(user = username, token = token)
+        val response =
+            repositoryService.getRepositoriesForAuthenticatedUser(user = username, token = token)
+        if (response.isSuccessful) {
+            response.body()?.let {
+                return it
+            }
+            return listOf()
+        }
+        return listOf()
+    }
+
+    override suspend fun getRepositoriesForUnAuthenticatedUser(
+        username: String,
+    ): List<RepositoryModel> {
+        val response =
+            repositoryService.getRepositoriesForUnauthenticatedUser(user = username)
+        if (response.isSuccessful) {
+            response.body()?.let {
+                return it
+            }
+            return listOf()
+        }
+        return listOf()
     }
 
     override suspend fun getRepository(owner: String, repo: String): RepositoryModel {

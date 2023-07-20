@@ -34,8 +34,12 @@ class RepositoryViewModel(private val repository: Repository) : ViewModel() {
     private val checkIfRepoIsStarredMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val checkIfRepoIsStarredLiveData: LiveData<Boolean> get() = checkIfRepoIsStarredMutableLiveData
 
-    fun getRepositoriesForUser(user: String, token: String) = viewModelScope.launch {
-        repositoriesMutableLiveData.value = repository.getRepositoriesForUser(username = user, token = token)
+    fun getStarredRepositoriesForAuthenticatedUser(user: String, token: String) = viewModelScope.launch {
+        repositoriesMutableLiveData.value = repository.getStarredRepositoriesForAuthenticatedUser(username = user, token = token)
+    }
+
+    fun getRepositoriesForUnAuthenticatedUser(user: String) = viewModelScope.launch {
+        repositoriesMutableLiveData.value = repository.getRepositoriesForUnAuthenticatedUser(username = user)
     }
 
     fun searchRepositories(query: String, token: String) = viewModelScope.launch {

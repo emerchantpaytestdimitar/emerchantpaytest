@@ -17,16 +17,20 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.emerchantpay.account.domain.model.User
+import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
 import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.FragmentProfileBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class BaseAccountFragment: Fragment() {
 
-    private lateinit var binding: FragmentProfileBinding
-    private lateinit var user: User
-    private lateinit var token: String
+abstract class BaseAccountFragment : Fragment() {
+
+    private val viewModel: AccountViewModel by viewModel()
+
+    protected lateinit var binding: FragmentProfileBinding
+    protected lateinit var user: User
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,60 +44,18 @@ abstract class BaseAccountFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupMenu()
+        setupObserving()
         disableBackNavigation()
+        setClickListeners()
         val user: User? = arguments?.getParcelable("user")
         user?.let {
-            this.user = it
-            binding.username.text = it.login
-            binding.followersNumber.text = it.followers.toString()
-            binding.followingNumber.text = it.following.toString()
-
-            val options = RequestOptions()
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-
-            Glide.with(this)
-                .load(it.avatarUrl)
-                .override(300, 300)
-                .apply(options)
-                .into(binding.avatarImage)
-        }
-
-        arguments?.getString("token")?.let {
-            this.token = it
-        }
-        setClickListeners()
-    }
-
-    private fun setClickListeners() {
-
-        binding.btnRepositories.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("username", user?.login)
-            findNavController().navigate(R.id.repositoryFragment, bundle)
-        }
-
-        binding.followers.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(
-                NavigationConstants.NAVIGATION_CONSTANT_KEY,
-                NavigationConstants.NAVIGATION_CONSTANT_FOLLOWERS
-            )
-            bundle.putString("ownerName", user.login)
-            findNavController().navigate(R.id.userListFragment, bundle)
-        }
-
-        binding.following.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(
-                NavigationConstants.NAVIGATION_CONSTANT_KEY,
-                NavigationConstants.NAVIGATION_CONSTANT_FOLLOWING
-            )
-            bundle.putString("ownerName", user.login)
-            findNavController().navigate(R.id.userListFragment, bundle)
+            SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
+                viewModel.getUser(userId = user.login, token = token)
+            }
         }
     }
+
+    protected abstract fun setClickListeners()
 
     private fun setupMenu() {
         val menuHost: MenuHost = requireActivity()
@@ -124,5 +86,25 @@ abstract class BaseAccountFragment: Fragment() {
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
+    private fun setupObserving() {
+        viewModel.getUserLiveData.observe(viewLifecycleOwner) { user ->
+            this.user = user
+            binding.username.text = user.login
+            binding.followersNumber.text = user.followers.toString()
+            binding.followingNumber.text = user.following.toString()
+
+            val options = RequestOptions()
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+
+            Glide.with(this)
+                .load(user.avatarUrl)
+                .override(300, 300)
+                .apply(options)
+                .into(binding.avatarImage)
+        }
     }
 }

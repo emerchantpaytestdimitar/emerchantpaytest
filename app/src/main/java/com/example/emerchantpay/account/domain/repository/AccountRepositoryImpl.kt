@@ -8,6 +8,7 @@ import com.example.emerchantpay.data.remote.CLIENT_ID
 import com.example.emerchantpay.data.remote.CLIENT_SECRET
 import com.example.emerchantpay.data.remote.REDIRECT_URL
 import okhttp3.Credentials
+import retrofit2.Response
 import java.io.IOException
 
 class AccountRepositoryImpl(
@@ -40,15 +41,41 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun listFollowers(user: String, token: String): List<User> {
-        return profileService.listFollowers(user, "Bearer $token")
+        val response = profileService.listFollowers(user = user, token = "Bearer $token")
+        if (response.isSuccessful) {
+            response.body()?.let {
+                return it
+            }
+            return listOf()
+        }
+        return listOf()
     }
 
     override suspend fun listFollowing(user: String, token: String): List<User> {
-        return profileService.listFollowing(user = user, token = "Bearer $token")
+        val response = profileService.listFollowing(user = user, token = "Bearer $token")
+        if (response.isSuccessful) {
+            response.body()?.let {
+                return it
+            }
+            return listOf()
+        }
+        return listOf()
     }
 
     override suspend fun searchUsers(query: String, token: String): List<User> {
         return profileService.searchUsers(query = query, token = "Bearer $token").items
+    }
+
+    override suspend fun getUser(userId: String, token: String): User {
+        val response = profileService.getUser(userId = userId, token = token)
+
+        if (response.isSuccessful) {
+            response.body()?.let {
+                return it
+            }
+        }
+
+        return User()
     }
 
 }

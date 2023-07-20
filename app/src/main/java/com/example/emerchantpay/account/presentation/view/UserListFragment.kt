@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.example.emerchantpay.account.domain.model.User
@@ -107,10 +108,17 @@ class UserListFragment : Fragment() {
     }
 
     private fun loadUsersIntoAdapter(users: List<User?>) {
+        if (users.isEmpty()) {
+            displayEmptyDataToast()
+        }
         usersAdapter = UsersAdapter(users)
         binding.recyclerView.apply {
             adapter = usersAdapter
         }
         usersAdapter.notifyDataSetChanged()
+    }
+
+    private fun displayEmptyDataToast() {
+        Toast.makeText(requireContext(), "No Users to Show", Toast.LENGTH_LONG).show()
     }
 }
