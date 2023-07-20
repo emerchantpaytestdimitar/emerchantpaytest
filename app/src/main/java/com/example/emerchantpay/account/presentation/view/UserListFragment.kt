@@ -43,9 +43,9 @@ class UserListFragment : Fragment() {
         arguments?.getString(NavigationConstants.NAVIGATION_CONSTANT_KEY)?.let {
             when (it) {
                 NavigationConstants.NAVIGATION_CONSTANT_FOLLOWERS -> {
-                    arguments?.getString("ownerName")?.let { ownerName ->
+                    arguments?.getParcelable<User>("user")?.let { user ->
                         SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
-                            viewModel.listFollowers(user = ownerName, token = token)
+                            viewModel.listFollowers(user = user, token = token)
                         }
                     }
                 }
@@ -59,10 +59,10 @@ class UserListFragment : Fragment() {
                 }
 
                 NavigationConstants.NAVIGATION_CONSTANT_FOLLOWING -> {
-                    arguments?.getString("ownerName")?.let { ownerName ->
+                    arguments?.getParcelable<User>("user")?.let { user ->
 
                         SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
-                            viewModel.listFollowing(user = ownerName, token = token)
+                            viewModel.listFollowing(user = user, token = token)
                         }
                     }
                 }

@@ -33,4 +33,5 @@ object UserRoomConstants {
     const val FOLLOWING = "following"
     const val CREATED_AT = "created_at"
     const val UPDATED_AT = "updated_at"
+    const val FOLLOWED_BY_USER_ID = "followed_by_user_id"
 }

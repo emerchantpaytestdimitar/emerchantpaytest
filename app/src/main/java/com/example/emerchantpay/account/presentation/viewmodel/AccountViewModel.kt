@@ -49,11 +49,11 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
         }
     }
 
-    fun listFollowers(user: String, token: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun listFollowers(user: User, token: String) = viewModelScope.launch(Dispatchers.IO) {
         listFollowersMutableLiveData.postValue(repository.listFollowers(user, token))
     }
 
-    fun listFollowing(user: String, token: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun listFollowing(user: User, token: String) = viewModelScope.launch(Dispatchers.IO) {
         listFollowingMutableLiveData.postValue(repository.listFollowing(user, token))
     }
 

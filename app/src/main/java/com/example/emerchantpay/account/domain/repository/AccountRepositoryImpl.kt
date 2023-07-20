@@ -1,19 +1,25 @@
 package com.example.emerchantpay.account.domain.repository
 
+import android.util.Log
 import com.example.emerchantpay.account.data.remote.ProfileService
 import com.example.emerchantpay.account.data.remote.TokenService
 import com.example.emerchantpay.account.domain.model.AccessTokenModel
+import com.example.emerchantpay.account.domain.model.ConverterUserUtil
 import com.example.emerchantpay.account.domain.model.User
+import com.example.emerchantpay.common.AppDatabase
 import com.example.emerchantpay.data.remote.CLIENT_ID
 import com.example.emerchantpay.data.remote.CLIENT_SECRET
 import com.example.emerchantpay.data.remote.REDIRECT_URL
+import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil
+import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import okhttp3.Credentials
 import retrofit2.Response
 import java.io.IOException
 
 class AccountRepositoryImpl(
     private val service: TokenService,
-    private val profileService: ProfileService
+    private val profileService: ProfileService,
+    private val db: AppDatabase
 ) : AccountRepository {
 
     override suspend fun getToken(code: String): String? {
@@ -33,33 +39,48 @@ class AccountRepositoryImpl(
 
     override suspend fun performLogin(token: String): User? {
         val response = profileService.performLogin(Credentials.basic("", token))
-        if (response.isSuccessful) {
-            return response.body()
+        return if (response.isSuccessful) {
+            response.body()
         } else {
-            return null
+            null
         }
     }
 
-    override suspend fun listFollowers(user: String, token: String): List<User> {
-        val response = profileService.listFollowers(user = user, token = "Bearer $token")
-        if (response.isSuccessful) {
+    override suspend fun listFollowers(user: User, token: String): List<User> {
+
+        val response: Response<List<User>>
+        var isSuccessful = false
+        var body: List<User> = listOf()
+        try {
+            response = profileService.listFollowers(user = user.login, token = "Bearer $token")
+            isSuccessful = response.isSuccessful
             response.body()?.let {
-                return it
+                body = it
             }
-            return listOf()
+        } catch (e: Exception) {
+            isSuccessful = false
+            Log.e(e.message, e.toString())
         }
-        return listOf()
+
+        return handleUsers(user = user, body = body, isSuccessful = isSuccessful)
     }
 
-    override suspend fun listFollowing(user: String, token: String): List<User> {
-        val response = profileService.listFollowing(user = user, token = "Bearer $token")
-        if (response.isSuccessful) {
+    override suspend fun listFollowing(user: User, token: String): List<User> {
+        val response: Response<List<User>>
+        var isSuccessful = false
+        var body: List<User> = listOf()
+        try {
+            response = profileService.listFollowing(user = user.login, token = "Bearer $token")
+            isSuccessful = response.isSuccessful
             response.body()?.let {
-                return it
+                body = it
             }
-            return listOf()
+        } catch (e: Exception) {
+            isSuccessful = false
+            Log.e(e.message, e.toString())
         }
-        return listOf()
+
+        return handleUsers(user = user, body = body, isSuccessful = isSuccessful)
     }
 
     override suspend fun searchUsers(query: String, token: String): List<User> {
@@ -76,6 +97,28 @@ class AccountRepositoryImpl(
         }
 
         return User()
+    }
+
+    private suspend fun handleUsers(
+        user: User,
+        body: List<User>,
+        isSuccessful: Boolean
+    ): List<User> {
+        val ownerId = user.id
+        if (isSuccessful) {
+            db.repositoryModelDao().deleteAllReposByStarredByUserId(ownerId)
+            body.let { users ->
+                val userDbList = ConverterUserUtil.convertUserListToUserDbList(users)
+                userDbList.forEach {
+                    it.followedByUserId = user.id
+                    db.usesrDao().insertRepository(it)
+                }
+            }
+        }
+
+        return ConverterUserUtil.convertUserDbListToUserList(
+            db.usesrDao().getRepositoriesAndOwnerByOwnerId(user.id)
+        )
     }
 
 }

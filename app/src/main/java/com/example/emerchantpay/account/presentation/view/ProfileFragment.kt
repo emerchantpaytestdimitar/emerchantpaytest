@@ -20,7 +20,7 @@ class ProfileFragment : BaseAccountFragment() {
                 NavigationConstants.NAVIGATION_CONSTANT_KEY,
                 NavigationConstants.NAVIGATION_CONSTANT_FOLLOWERS
             )
-            bundle.putString("ownerName", user.login)
+            bundle.putParcelable("user", user)
             findNavController().navigate(R.id.userListFragment, bundle)
         }
 
@@ -30,7 +30,7 @@ class ProfileFragment : BaseAccountFragment() {
                 NavigationConstants.NAVIGATION_CONSTANT_KEY,
                 NavigationConstants.NAVIGATION_CONSTANT_FOLLOWING
             )
-            bundle.putString("ownerName", user.login)
+            bundle.putParcelable("user", user)
             findNavController().navigate(R.id.userListFragment, bundle)
         }
     }

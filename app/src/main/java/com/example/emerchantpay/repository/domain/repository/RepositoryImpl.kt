@@ -23,42 +23,46 @@ class RepositoryImpl(
         user: User,
         token: String
     ): List<RepositoryModel> {
-        val response =
-            repositoryService.getRepositoriesForAuthenticatedUser(user = user.login, token = token)
-        if (response.isSuccessful) {
-            var ownerId = user.id
-            db.repositoryModelDao().deleteAllReposByStarredByUserId(ownerId)
-            response.body()?.let { repositories ->
-                for (repository in repositories) {
-                    repository.starredByUserId = user.id
-                    val repositoryModelAndOwner = convertModelToRepositoryAndOwner(repository)
-                    db.repositoryModelDao().insert(repositoryModelAndOwner)
-                }
-                return getRepositoriesModelByOwnerId(ownerId, db.repositoryModelDao())
+        val response: Response<List<RepositoryModel>>
+        var isSuccessful = false
+        var body: List<RepositoryModel> = listOf()
+        try {
+            response =
+                repositoryService.getRepositoriesForAuthenticatedUser(
+                    user = user.login,
+                    token = token
+                )
+            isSuccessful = response.isSuccessful
+            response.body()?.let {
+                body = it
             }
-            return listOf()
+        } catch (e: Exception) {
+            isSuccessful = false
+            Log.e(e.message, e.toString())
+
         }
-        return listOf()
+        return handleRepositories(user = user, body = body, isSuccessful = isSuccessful)
     }
 
     override suspend fun getRepositoriesForUnAuthenticatedUser(
         user: User,
     ): List<RepositoryModel> {
-        val response =
-            repositoryService.getRepositoriesForUnauthenticatedUser(user = user.login)
-        if (response.isSuccessful) {
-            var ownerId = user.id
-            response.body()?.let { repositories ->
-                for (repository in repositories) {
-                    val repositoryModelAndOwner = convertModelToRepositoryAndOwner(repository)
-                    db.repositoryModelDao().deleteAllReposByStarredByUserId(ownerId)
-                    db.repositoryModelDao().insert(repositoryModelAndOwner)
-                }
-                return getRepositoriesModelByOwnerId(ownerId, db.repositoryModelDao())
+        val response: Response<List<RepositoryModel>>
+        var isSuccessful = false
+        var body: List<RepositoryModel> = listOf()
+        try {
+            response =
+                repositoryService.getRepositoriesForUnauthenticatedUser(user = user.login)
+            isSuccessful = response.isSuccessful
+            response.body()?.let {
+                body = it
             }
-            return listOf()
+        } catch (e: Exception) {
+            isSuccessful = false
+            Log.e(e.message, e.toString())
+
         }
-        return listOf()
+        return handleRepositories(user = user, body = body, isSuccessful = isSuccessful)
     }
 
     override suspend fun getRepository(owner: String, repo: String): RepositoryModel {
@@ -120,6 +124,25 @@ class RepositoryImpl(
         query: String
     ): List<RepositoryModel> {
         return repositoryService.searchRepositories(query = query, token = "Bearer $token").items
+    }
+
+    private suspend fun handleRepositories(
+        user: User,
+        body: List<RepositoryModel>,
+        isSuccessful: Boolean
+    ): List<RepositoryModel> {
+        val ownerId = user.id
+        if (isSuccessful) {
+            db.repositoryModelDao().deleteAllReposByStarredByUserId(ownerId)
+            body.let { repositories ->
+                for (repository in repositories) {
+                    repository.starredByUserId = user.id
+                    val repositoryModelAndOwner = convertModelToRepositoryAndOwner(repository)
+                    db.repositoryModelDao().insert(repositoryModelAndOwner)
+                }
+            }
+        }
+        return getRepositoriesModelByOwnerId(ownerId, db.repositoryModelDao())
     }
 
 }

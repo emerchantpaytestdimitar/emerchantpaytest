@@ -9,10 +9,10 @@ interface AccountRepository {
     suspend fun getToken(code: String): String?
     suspend fun performLogin(token: String): User?
 
-    suspend fun listFollowers(user: String, token: String): List<User>
+    suspend fun listFollowers(user: User, token: String): List<User>
 
     suspend fun listFollowing(
-        user: String,
+        user: User,
         token: String
     ): List<User>
 
