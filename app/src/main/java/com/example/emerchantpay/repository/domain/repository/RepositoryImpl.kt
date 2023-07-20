@@ -2,7 +2,11 @@ package com.example.emerchantpay.repository.domain.repository
 
 import android.util.Log
 import com.example.emerchantpay.account.domain.model.User
+import com.example.emerchantpay.common.AppDatabase
 import com.example.emerchantpay.repository.data.remote.RepositoryService
+import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil.convertModelToRepositoryAndOwner
+import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil.convertRepositoryModelToDb
+import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil.getRepositoriesModelByOwnerId
 import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import com.example.emerchantpay.repository.domain.model.RepositorySearchResponse
 import okhttp3.Credentials
@@ -10,17 +14,27 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RepositoryImpl(private val repositoryService: RepositoryService) : Repository {
+class RepositoryImpl(
+    private val repositoryService: RepositoryService,
+    private val db: AppDatabase
+) : Repository {
 
     override suspend fun getStarredRepositoriesForAuthenticatedUser(
-        username: String,
+        user: User,
         token: String
     ): List<RepositoryModel> {
         val response =
-            repositoryService.getRepositoriesForAuthenticatedUser(user = username, token = token)
+            repositoryService.getRepositoriesForAuthenticatedUser(user = user.login, token = token)
         if (response.isSuccessful) {
-            response.body()?.let {
-                return it
+            var ownerId = user.id
+            db.repositoryModelDao().deleteAllReposByStarredByUserId(ownerId)
+            response.body()?.let { repositories ->
+                for (repository in repositories) {
+                    repository.starredByUserId = user.id
+                    val repositoryModelAndOwner = convertModelToRepositoryAndOwner(repository)
+                    db.repositoryModelDao().insert(repositoryModelAndOwner)
+                }
+                return getRepositoriesModelByOwnerId(ownerId, db.repositoryModelDao())
             }
             return listOf()
         }
@@ -28,13 +42,19 @@ class RepositoryImpl(private val repositoryService: RepositoryService) : Reposit
     }
 
     override suspend fun getRepositoriesForUnAuthenticatedUser(
-        username: String,
+        user: User,
     ): List<RepositoryModel> {
         val response =
-            repositoryService.getRepositoriesForUnauthenticatedUser(user = username)
+            repositoryService.getRepositoriesForUnauthenticatedUser(user = user.login)
         if (response.isSuccessful) {
-            response.body()?.let {
-                return it
+            var ownerId = user.id
+            response.body()?.let { repositories ->
+                for (repository in repositories) {
+                    val repositoryModelAndOwner = convertModelToRepositoryAndOwner(repository)
+                    db.repositoryModelDao().deleteAllReposByStarredByUserId(ownerId)
+                    db.repositoryModelDao().insert(repositoryModelAndOwner)
+                }
+                return getRepositoriesModelByOwnerId(ownerId, db.repositoryModelDao())
             }
             return listOf()
         }

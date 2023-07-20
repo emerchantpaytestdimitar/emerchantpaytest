@@ -13,9 +13,9 @@ data class RepositoryModel(
     val name: String,
     @SerializedName("full_name")
     val fullName: String,
-    val ownerId: Int,
     @SerializedName("description")
     val description: String?,
     @SerializedName("owner")
-    val owner: RepositoryOwner
+    val owner: RepositoryOwner,
+    var starredByUserId: Long = -1
 ) : Parcelable

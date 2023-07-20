@@ -16,6 +16,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.constants.NavigationConstants
+import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import com.example.emerchantpay.repository.presentation.viewmodel.RepositoryViewModel
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.FragmentRepositoryBinding
@@ -42,17 +43,14 @@ class RepositoryDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupMenu()
         setupRepositoriesObserving()
-        val owner: String? = arguments?.getString("owner")
-        owner?.let { ownerString ->
-            this.ownerName = ownerString
-            arguments?.getString("repo")?.let { repo ->
-                this.repoName = repo
-                viewModel.getRepository(owner, repo)
+            arguments?.getParcelable<RepositoryModel>("repo")?.let { repo ->
+                this.repoName = repo.name
+                binding.tvRepositoryName.text = repo.name
+                binding.tvOwner.text = repo.owner.login
                 SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
-                    viewModel.checkIfRepoIsStarred(owner = owner, repo = repo, token = token)
+                    viewModel.checkIfRepoIsStarred(owner = repo.owner.login, repo = repo.name, token = token)
                 }
             }
-        }
     }
 
     private fun setupRepositoriesObserving() {
@@ -122,8 +120,13 @@ class RepositoryDetailsFragment : Fragment() {
     }
 
     private fun getString(key: String): String {
-        arguments?.getString(key)?.let {
-            return it
+        val repo: RepositoryModel? = arguments?.getParcelable("repo")
+        repo?.let {
+            when(key) {
+                "repo" -> return  repo.name
+                "owner" -> return repo.owner.login
+                else -> {return ""}
+            }
         }
         return ""
     }

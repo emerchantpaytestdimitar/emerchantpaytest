@@ -19,8 +19,7 @@ class RepositoryViewHolder(private val binding: ItemRepositoryBinding) : Recycle
 
         binding.root.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("owner", repository.owner.login)
-            bundle.putString("repo", repository.name)
+            bundle.putParcelable("repo", repository)
             it.findNavController().navigate(R.id.repositoryDetailsFragment, bundle)
         }
     }

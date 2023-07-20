@@ -1,4 +1,3 @@
-
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import com.example.emerchantpay.account.presentation.view.BaseAccountFragment
@@ -10,7 +9,7 @@ class ProfileFragment : BaseAccountFragment() {
     override fun setClickListeners() {
         binding.btnRepositories.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("username", user.login)
+            bundle.putParcelable("user", user)
             bundle.putBoolean("isAuthenticated", true)
             findNavController().navigate(R.id.repositoryFragment, bundle)
         }

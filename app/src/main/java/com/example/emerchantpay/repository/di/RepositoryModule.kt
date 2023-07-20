@@ -15,7 +15,7 @@ import retrofit2.Retrofit
 val repositoryModule = module {
     includes(roomModule, retrofitModule)
     single { get<Retrofit>(named(ModuleConstants.MODULE_NAME_RETROFIT_API)).create(RepositoryService::class.java) }
-    single<Repository> { RepositoryImpl(get()) }
+    single<Repository> { RepositoryImpl(get(), get()) }
 
     viewModel { RepositoryViewModel(get()) }
 }

@@ -2,6 +2,7 @@ package com.example.emerchantpay.repository.domain.model
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -9,33 +10,27 @@ import com.example.emerchantpay.data.constants.RepositoryConstants
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
-@Entity(
-    tableName = "table_repositories",
-    foreignKeys = [
-        ForeignKey(
-            entity = RepositoryOwner::class,
-            parentColumns = ["id"],
-            childColumns = ["ownerId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
 @Parcelize
+@Entity(
+    tableName = "table_repositories"
+)
 data class RepositoryModelDb(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo("id_db")
-    val id_db: Long,
-    @SerializedName("id")
-    @ColumnInfo(name = RepositoryConstants.ID)
-    val id: Int,
-    @SerializedName("name")
-    @ColumnInfo(name = RepositoryConstants.NAME)
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "repoId")
+    val repoId: Int,
+
+    @ColumnInfo(name = "name")
     val name: String,
-    @SerializedName("full_name")
+
+    @ColumnInfo(name = "full_name")
     val fullName: String,
-    @ColumnInfo(index = true, name = "ownerId")
+
+    @ColumnInfo(name = "ownerId")
     val ownerId: Int,
-    @ColumnInfo(name = RepositoryConstants.DESCRIPTION)
-    @SerializedName("description")
-    val description: String?
+
+    @ColumnInfo(name = "description")
+    val description: String?,
+
+    @ColumnInfo(name = "starredByUserId")
+    var starredByUserId: Long = -2
 ) : Parcelable

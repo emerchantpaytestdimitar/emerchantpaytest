@@ -10,7 +10,7 @@ class UserFragment : BaseAccountFragment() {
     override fun setClickListeners() {
         binding.btnRepositories.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("username", user.login)
+            bundle.putParcelable("user", user)
             bundle.putBoolean("isAuthenticated", false)
             findNavController().navigate(R.id.repositoryFragment, bundle)
         }

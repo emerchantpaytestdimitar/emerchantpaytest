@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import com.example.emerchantpay.repository.domain.repository.Repository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RepositoryViewModel(private val repository: Repository) : ViewModel() {
@@ -34,43 +35,68 @@ class RepositoryViewModel(private val repository: Repository) : ViewModel() {
     private val checkIfRepoIsStarredMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val checkIfRepoIsStarredLiveData: LiveData<Boolean> get() = checkIfRepoIsStarredMutableLiveData
 
-    fun getStarredRepositoriesForAuthenticatedUser(user: String, token: String) = viewModelScope.launch {
-        repositoriesMutableLiveData.value = repository.getStarredRepositoriesForAuthenticatedUser(username = user, token = token)
+    fun getStarredRepositoriesForAuthenticatedUser(user: User, token: String) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repositoriesMutableLiveData.postValue(
+                repository.getStarredRepositoriesForAuthenticatedUser(
+                    user = user,
+                    token = token
+                )
+            )
+        }
+
+    fun getRepositoriesForUnAuthenticatedUser(user: User) = viewModelScope.launch(Dispatchers.IO) {
+        repositoriesMutableLiveData.postValue(repository.getRepositoriesForUnAuthenticatedUser(user = user))
     }
 
-    fun getRepositoriesForUnAuthenticatedUser(user: String) = viewModelScope.launch {
-        repositoriesMutableLiveData.value = repository.getRepositoriesForUnAuthenticatedUser(username = user)
-    }
-
-    fun searchRepositories(query: String, token: String) = viewModelScope.launch {
-        searchRepositoriesMutableLiveData.value =
+    fun searchRepositories(query: String, token: String) = viewModelScope.launch(Dispatchers.IO) {
+        searchRepositoriesMutableLiveData.postValue(
             repository.searchRepositories(query = query, token = token)
+        )
     }
 
-    fun getRepository(owner: String, repo: String) = viewModelScope.launch {
-        repositoryMutableLiveData.value = repository.getRepository(owner, repo)
+    fun getRepository(owner: String, repo: String) = viewModelScope.launch(Dispatchers.IO) {
+        repositoryMutableLiveData.postValue(repository.getRepository(owner, repo))
     }
 
     fun listRepoContributors(
         owner: String, repo: String
-    ) = viewModelScope.launch {
-        contributorsMutableLiveData.value =
-            repository.listRepoContributors(owner = owner, repo = repo)
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        contributorsMutableLiveData.postValue(
+            repository.listRepoContributors(
+                owner = owner,
+                repo = repo
+            )
+        )
     }
 
-    fun starRepo(owner: String, repo: String, token: String) = viewModelScope.launch {
-        starRepoMutableLiveData.value =
-            repository.starRepo(owner = owner, repo = repo, token = token)
-    }
+    fun starRepo(owner: String, repo: String, token: String) =
+        viewModelScope.launch(Dispatchers.IO) {
+            starRepoMutableLiveData.postValue(
+                repository.starRepo(
+                    owner = owner,
+                    repo = repo,
+                    token = token
+                )
+            )
+        }
 
-    fun unStarRepo(owner: String, repo: String, token: String) = viewModelScope.launch {
-        unStarRepoMutableLiveData.value =
-            repository.unStarRepo(owner = owner, repo = repo, token = token)
-    }
+    fun unStarRepo(owner: String, repo: String, token: String) =
+        viewModelScope.launch(Dispatchers.IO) {
+            unStarRepoMutableLiveData.postValue(
+                repository.unStarRepo(owner = owner, repo = repo, token = token)
+            )
+        }
 
-    fun checkIfRepoIsStarred(owner: String, repo: String, token: String) = viewModelScope.launch {
-        checkIfRepoIsStarredMutableLiveData.value =
-            repository.checkIfRepoIsStarred(owner = owner, repo = repo, token = token)
-    }
+    fun checkIfRepoIsStarred(owner: String, repo: String, token: String) =
+        viewModelScope.launch(Dispatchers.IO) {
+            checkIfRepoIsStarredMutableLiveData.postValue(
+                repository.checkIfRepoIsStarred(
+                    owner = owner,
+                    repo = repo,
+                    token = token
+                )
+            )
+        }
 
 }

@@ -5,8 +5,8 @@ import com.example.emerchantpay.repository.domain.model.RepositoryModel
 
 interface Repository {
 
-    suspend fun getStarredRepositoriesForAuthenticatedUser(username: String, token: String): List<RepositoryModel>
-    suspend fun getRepositoriesForUnAuthenticatedUser(username: String): List<RepositoryModel>
+    suspend fun getStarredRepositoriesForAuthenticatedUser(user: User, token: String): List<RepositoryModel>
+    suspend fun getRepositoriesForUnAuthenticatedUser(user: User): List<RepositoryModel>
     suspend fun getRepository(owner: String, repo: String): RepositoryModel
     suspend fun listRepoContributors(
         owner: String, repo: String

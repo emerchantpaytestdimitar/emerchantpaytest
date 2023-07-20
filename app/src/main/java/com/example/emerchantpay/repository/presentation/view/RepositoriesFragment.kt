@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import com.example.emerchantpay.repository.presentation.view.adapter.RepositoryAdapter
@@ -30,7 +31,7 @@ class RepositoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupRepositoriesObserving()
         setupSearch()
-        val username: String? = arguments?.getString("username")
+        val username: User? = arguments?.getParcelable("user")
         username?.let { user ->
             arguments?.getBoolean("isAuthenticated")?.let { isAuthenticated ->
                 if (isAuthenticated) {
