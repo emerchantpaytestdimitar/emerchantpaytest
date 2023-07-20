@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">EmerchantPayTest</string>
-    <!-- Strings related to login -->
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -10,4 +9,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="followers_label">Followers :</string>
+    <string name="followers_btn">Followers</string>
+    <string name="repositories_btn">Repositories</string>
+    <string name="following_btn">Following</string>
+    <string name="following_label">Following :</string>
+    <string name="contributors_btn">Contributors</string>
+    <string name="star">Star</string>
+    <string name="unstar">Unstar</string>
 </resources>
