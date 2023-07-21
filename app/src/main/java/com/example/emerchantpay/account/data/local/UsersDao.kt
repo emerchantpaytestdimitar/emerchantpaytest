@@ -12,18 +12,25 @@ import androidx.room.Update
 interface UsersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRepository(user: UserDb)
+    fun insertUser(user: UserDb)
 
     @Update
-    fun updateRepository(user: UserDb)
+    fun updateUser(user: UserDb)
 
     @Delete
-    fun deleteRepository(user: UserDb)
+    fun deleteUser(user: UserDb)
+
+    @Query("SELECT * FROM users WHERE id = :id")
+    fun getUserById(id: Long): UserDb
+
+    @Query("DELETE FROM users WHERE id = :id")
+    fun deleteUserById(id: Long)
 
     @Transaction
     @Query("SELECT * FROM users WHERE followed_by_user_id = :followedByUserId")
-    fun getRepositoriesAndOwnerByOwnerId(followedByUserId: Long): List<UserDb>
+    fun getUsersByOwnerId(followedByUserId: Long): List<UserDb>
 
     @Query("DELETE FROM users WHERE followed_by_user_id = :followedByUserId")
-    fun deleteAllReposByStarredByUserId(followedByUserId: Long)
+    fun deleteAllUsersByFollowedByUserId(followedByUserId: Long)
+
 }

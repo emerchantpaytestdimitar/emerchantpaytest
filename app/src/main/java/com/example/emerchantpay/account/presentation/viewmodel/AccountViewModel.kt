@@ -61,7 +61,7 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
         searchUsersMutableLiveData.postValue(repository.searchUsers(query = query, token = token))
     }
 
-    fun getUser(userId: String, token: String) = viewModelScope.launch(Dispatchers.IO) {
-        getUserMutableLiveData.postValue(repository.getUser(userId = userId, token = token))
+    fun getUser(user: User, token: String) = viewModelScope.launch(Dispatchers.IO) {
+        getUserMutableLiveData.postValue(repository.getUser(user = user, token = token))
     }
 }

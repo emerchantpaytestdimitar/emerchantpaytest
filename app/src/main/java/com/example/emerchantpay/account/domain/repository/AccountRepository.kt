@@ -18,5 +18,5 @@ interface AccountRepository {
 
     suspend fun searchUsers(query: String, token: String): List<User>
 
-    suspend fun getUser(userId: String, token: String): User
+    suspend fun getUser(user: User, token: String): User
 }

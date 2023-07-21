@@ -10,8 +10,6 @@ import com.example.emerchantpay.common.AppDatabase
 import com.example.emerchantpay.data.remote.CLIENT_ID
 import com.example.emerchantpay.data.remote.CLIENT_SECRET
 import com.example.emerchantpay.data.remote.REDIRECT_URL
-import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil
-import com.example.emerchantpay.repository.domain.model.RepositoryModel
 import okhttp3.Credentials
 import retrofit2.Response
 import java.io.IOException
@@ -47,7 +45,6 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun listFollowers(user: User, token: String): List<User> {
-
         val response: Response<List<User>>
         var isSuccessful = false
         var body: List<User> = listOf()
@@ -87,16 +84,40 @@ class AccountRepositoryImpl(
         return profileService.searchUsers(query = query, token = "Bearer $token").items
     }
 
-    override suspend fun getUser(userId: String, token: String): User {
-        val response = profileService.getUser(userId = userId, token = token)
-
-        if (response.isSuccessful) {
+    override suspend fun getUser(user: User, token: String): User {
+        val response: Response<User>
+        var isSuccessful = false
+        var body: User = User()
+        try {
+            response = profileService.getUser(userId = user.login, token = token)
             response.body()?.let {
-                return it
+                body = it
             }
+            isSuccessful = true
+        } catch (e: Exception) {
+            isSuccessful = false
+            Log.e(e.message, e.toString())
         }
 
-        return User()
+        return handleUser(user = user, body = user, isSuccessful)
+    }
+
+    private suspend fun handleUser(
+        user: User,
+        body: User,
+        isSuccessful: Boolean
+    ): User {
+        val ownerId = user.id
+        if (isSuccessful) {
+            db.usesrDao().deleteUserById(ownerId)
+            val userDb = ConverterUserUtil.convertUserToUserDb(body)
+            userDb.followedByUserId = user.id
+            db.usesrDao().insertUser(userDb)
+        }
+
+        return ConverterUserUtil.convertUserDbToUser(
+            db.usesrDao().getUserById(user.id)
+        )
     }
 
     private suspend fun handleUsers(
@@ -106,18 +127,18 @@ class AccountRepositoryImpl(
     ): List<User> {
         val ownerId = user.id
         if (isSuccessful) {
-            db.repositoryModelDao().deleteAllReposByStarredByUserId(ownerId)
+            db.usesrDao().deleteAllUsersByFollowedByUserId(ownerId)
             body.let { users ->
                 val userDbList = ConverterUserUtil.convertUserListToUserDbList(users)
                 userDbList.forEach {
                     it.followedByUserId = user.id
-                    db.usesrDao().insertRepository(it)
+                    db.usesrDao().insertUser(it)
                 }
             }
         }
 
         return ConverterUserUtil.convertUserDbListToUserList(
-            db.usesrDao().getRepositoriesAndOwnerByOwnerId(user.id)
+            db.usesrDao().getUsersByOwnerId(user.id)
         )
     }
 

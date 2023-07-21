@@ -50,7 +50,7 @@ abstract class BaseAccountFragment : Fragment() {
         val user: User? = arguments?.getParcelable("user")
         user?.let {
             SecureTokenStorageUtil.retrieveToken(requireContext())?.let { token ->
-                viewModel.getUser(userId = user.login, token = token)
+                viewModel.getUser(user = user, token = token)
             }
         }
     }
@@ -97,8 +97,8 @@ abstract class BaseAccountFragment : Fragment() {
 
             val options = RequestOptions()
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .skipMemoryCache(false)
 
             Glide.with(this)
                 .load(user.avatarUrl)
