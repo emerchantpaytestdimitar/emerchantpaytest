@@ -13,9 +13,6 @@ const val CLIENT_SECRET = "fbbad320152a8aaf2b3a05491d251bd011daf0c4"
 const val REDIRECT_URL = "https://www.emerchantpay.com/"
 const val ACCESS_TOKEN = "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"
 
-//const val CLIENT_ID = "979865ca1f7931ff9549"
-//const val CLIENT_SECRET = "13670d20683b595fb77bfe298c64a00a88ba6577"
-
 class Retrofit {
 
     companion object {
