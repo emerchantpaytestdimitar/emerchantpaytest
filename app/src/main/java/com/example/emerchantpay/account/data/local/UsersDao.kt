@@ -12,7 +12,7 @@ import androidx.room.Update
 interface UsersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUser(user: UserDb)
+    fun insertUser(user: UserDb): Long
 
     @Update
     fun updateUser(user: UserDb)
@@ -23,6 +23,9 @@ interface UsersDao {
     @Query("SELECT * FROM users WHERE login LIKE '%' || :name || '%'")
     fun searchUserByName(name: String): List<UserDb>?
 
+    @Query("SELECT * FROM users")
+    fun getAllUsers(): List<UserDb>?
+
     @Query("SELECT * FROM users WHERE id = :id")
     fun getUserById(id: Long): UserDb
 
@@ -31,7 +34,7 @@ interface UsersDao {
 
     @Transaction
     @Query("SELECT * FROM users WHERE followed_by_user_id = :followedByUserId")
-    fun getUsersByOwnerId(followedByUserId: Long): List<UserDb>
+    fun getUsersByFollowedByUserId(followedByUserId: Long): List<UserDb>
 
     @Query("DELETE FROM users WHERE followed_by_user_id = :followedByUserId")
     fun deleteAllUsersByFollowedByUserId(followedByUserId: Long)

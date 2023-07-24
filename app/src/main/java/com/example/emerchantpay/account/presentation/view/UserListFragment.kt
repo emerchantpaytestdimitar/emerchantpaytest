@@ -98,8 +98,8 @@ class UserListFragment : Fragment() {
             loadUsersIntoAdapter(followers)
         }
 
-        viewModel.listFollowingsLiveData.observe(viewLifecycleOwner) { followers ->
-            loadUsersIntoAdapter(followers)
+        viewModel.listFollowingsLiveData.observe(viewLifecycleOwner) { following ->
+            loadUsersIntoAdapter(following)
         }
 
         viewModel.searchUsersLiveData.observe(viewLifecycleOwner) { searchedUsers ->

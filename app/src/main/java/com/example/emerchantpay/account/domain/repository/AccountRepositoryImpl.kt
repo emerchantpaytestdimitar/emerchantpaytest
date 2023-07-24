@@ -97,8 +97,8 @@ class AccountRepositoryImpl(
 
     override suspend fun getUser(user: User, token: String): User {
         val response: Response<User>
-        var isSuccessful = false
-        var body: User = User()
+        var isSuccessful: Boolean
+        var body = User()
         try {
             response = profileService.getUser(userId = user.login, token = token)
             response.body()?.let {
@@ -110,7 +110,7 @@ class AccountRepositoryImpl(
             Log.e(e.message, e.toString())
         }
 
-        return handleUser(user = user, body = user, isSuccessful)
+        return handleUser(user = user, body = body, isSuccessful)
     }
 
     private suspend fun handleUser(
@@ -122,12 +122,11 @@ class AccountRepositoryImpl(
         if (isSuccessful) {
             db.usesrDao().deleteUserById(ownerId)
             val userDb = ConverterUserUtil.convertUserToUserDb(body)
-            userDb.followedByUserId = user.id
             db.usesrDao().insertUser(userDb)
         }
 
         return ConverterUserUtil.convertUserDbToUser(
-            db.usesrDao().getUserById(user.id)
+            db.usesrDao().getUserById(ownerId)
         )
     }
 
@@ -138,18 +137,17 @@ class AccountRepositoryImpl(
     ): List<User> {
         val ownerId = user.id
         if (isSuccessful) {
-            db.usesrDao().deleteAllUsersByFollowedByUserId(ownerId)
             body.let { users ->
                 val userDbList = ConverterUserUtil.convertUserListToUserDbList(users)
                 userDbList.forEach {
-                    it.followedByUserId = user.id
+                    it.followedByUserId = ownerId
                     db.usesrDao().insertUser(it)
                 }
             }
         }
 
         return ConverterUserUtil.convertUserDbListToUserList(
-            db.usesrDao().getUsersByOwnerId(user.id)
+            db.usesrDao().getUsersByFollowedByUserId(ownerId)
         )
     }
 
