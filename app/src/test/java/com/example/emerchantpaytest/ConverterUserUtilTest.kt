@@ -4,7 +4,10 @@ import com.example.emerchantpay.account.domain.model.ConverterUserUtil
 import com.example.emerchantpay.account.domain.model.User
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
+@RunWith(JUnit4::class)
 class ConverterUserUtilTest {
 
     private val mockUserList = listOf(
