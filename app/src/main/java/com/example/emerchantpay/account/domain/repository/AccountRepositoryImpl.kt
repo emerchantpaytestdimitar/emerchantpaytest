@@ -81,7 +81,18 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun searchUsers(query: String, token: String): List<User> {
-        return profileService.searchUsers(query = query, token = "Bearer $token").items
+        var list = listOf<User>()
+        try {
+            list = profileService.searchUsers(query = query, token = "Bearer $token").items
+        } catch (e: Exception) {
+            Log.e(e.toString(), e.toString())
+        }
+        if (list.isEmpty()) {
+            db.usesrDao().searchUserByName(query)?.let {
+                list = ConverterUserUtil.convertUserDbListToUserList(it)
+            }
+        }
+        return list
     }
 
     override suspend fun getUser(user: User, token: String): User {

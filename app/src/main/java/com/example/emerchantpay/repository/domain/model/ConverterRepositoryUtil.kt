@@ -6,11 +6,6 @@ import com.example.emerchantpay.repository.data.local.RepositoryModelDao
 object ConverterRepositoryUtil {
 
     fun convertRepositoryModelToDb(repositoryModel: RepositoryModel): RepositoryModelDb {
-        val repositoryOwnerDb = RepositoryOwner(
-            ownerId = repositoryModel.owner.ownerId,
-            login = repositoryModel.owner.login
-        )
-
         return RepositoryModelDb(
             repoId = repositoryModel.id,
             name = repositoryModel.name,
@@ -39,8 +34,8 @@ object ConverterRepositoryUtil {
         ownerId: Long,
         repositoryModelDao: RepositoryModelDao
     ): List<RepositoryModel> {
-        val repositoriesAndOwner = repositoryModelDao.getRepositoriesAndOwnerByOwnerId(ownerId)
-        return repositoriesAndOwner.map { repositoryAndOwner ->
+        val repositoriesAndOwnerList = repositoryModelDao.getRepositoriesAndOwnerByOwnerId(ownerId)
+        return repositoriesAndOwnerList.map { repositoryAndOwner ->
             repositoryAndOwnerToModel(
                 repositoryAndOwner
             )

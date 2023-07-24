@@ -20,6 +20,9 @@ interface UsersDao {
     @Delete
     fun deleteUser(user: UserDb)
 
+    @Query("SELECT * FROM users WHERE login LIKE '%' || :name || '%'")
+    fun searchUserByName(name: String): List<UserDb>?
+
     @Query("SELECT * FROM users WHERE id = :id")
     fun getUserById(id: Long): UserDb
 

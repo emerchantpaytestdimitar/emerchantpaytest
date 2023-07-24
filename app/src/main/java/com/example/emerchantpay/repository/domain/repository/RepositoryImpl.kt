@@ -4,14 +4,10 @@ import android.util.Log
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.common.AppDatabase
 import com.example.emerchantpay.repository.data.remote.RepositoryService
+import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil
 import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil.convertModelToRepositoryAndOwner
-import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil.convertRepositoryModelToDb
 import com.example.emerchantpay.repository.domain.model.ConverterRepositoryUtil.getRepositoriesModelByOwnerId
 import com.example.emerchantpay.repository.domain.model.RepositoryModel
-import com.example.emerchantpay.repository.domain.model.RepositorySearchResponse
-import okhttp3.Credentials
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 
 class RepositoryImpl(
@@ -123,7 +119,24 @@ class RepositoryImpl(
         token: String,
         query: String
     ): List<RepositoryModel> {
-        return repositoryService.searchRepositories(query = query, token = "Bearer $token").items
+
+        var list = listOf<RepositoryModel>()
+        try {
+            list =
+                repositoryService.searchRepositories(query = query, token = "Bearer $token").items
+        } catch (e: Exception) {
+            Log.e(e.toString(), e.toString())
+        }
+        if (list.isEmpty()) {
+            db.repositoryModelDao().searchRepositoryByName(query).let {
+                list = it.map { repositoryAndOwner ->
+                    ConverterRepositoryUtil.repositoryAndOwnerToModel(
+                        repositoryAndOwner
+                    )
+                }
+            }
+        }
+        return list
     }
 
     private suspend fun handleRepositories(
