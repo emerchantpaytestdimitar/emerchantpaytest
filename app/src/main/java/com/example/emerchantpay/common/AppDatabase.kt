@@ -10,6 +10,7 @@ import com.example.emerchantpay.repository.data.local.RepositoryModelDao
 import com.example.emerchantpay.repository.domain.model.RepositoryModelDb
 import com.example.emerchantpay.repository.domain.model.RepositoryOwner
 
+const val DB_NAME = "emerchantpay_database"
 @Database(entities = [UserDb::class, RepositoryModelDb::class, RepositoryOwner::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -25,7 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "emerchantpay_database"
+                    DB_NAME
                 ).build()
                 INSTANCE = instance
                 instance

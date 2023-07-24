@@ -18,10 +18,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.emerchantpay.account.domain.model.User
 import com.example.emerchantpay.account.presentation.viewmodel.AccountViewModel
+import com.example.emerchantpay.common.DB_NAME
 import com.example.emerchantpay.common.SecureTokenStorageUtil
 import com.example.emerchantpay.common.constants.NavigationConstants
 import com.example.emerchantpaytest.R
 import com.example.emerchantpaytest.databinding.FragmentProfileBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -67,6 +71,7 @@ abstract class BaseAccountFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.logout -> {
+                        deleteDataBase()
                         SecureTokenStorageUtil.deleteToken(requireContext())
                         findNavController().navigate(R.id.action_logout)
                         true
@@ -105,6 +110,12 @@ abstract class BaseAccountFragment : Fragment() {
                 .override(300, 300)
                 .apply(options)
                 .into(binding.avatarImage)
+        }
+    }
+
+    private fun deleteDataBase() {
+        CoroutineScope(Dispatchers.IO).launch {
+            requireContext().applicationContext.deleteDatabase(DB_NAME)
         }
     }
 }

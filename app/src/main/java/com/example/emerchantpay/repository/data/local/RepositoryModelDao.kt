@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.example.emerchantpay.account.data.local.UserDb
 import com.example.emerchantpay.repository.domain.model.RepositoryModelDb
 import com.example.emerchantpay.repository.domain.model.RepositoryOwner
 
@@ -48,6 +47,7 @@ interface RepositoryModelDao {
     fun delete(repositoryAndOwner: RepositoryAndOwner) {
         deleteRepository(repositoryAndOwner.repository)
         deleteOwner(repositoryAndOwner.owner)
+    }
 
     @Transaction
     @Query("SELECT * FROM table_repositories WHERE name LIKE '%' || :name || '%'")
