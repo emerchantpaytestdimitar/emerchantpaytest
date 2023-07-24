@@ -11,10 +11,10 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
 object SecureTokenStorageUtil {
-    private const val ALIAS = "MyKeyAlias"
-    private const val PREFS_FILENAME = "MyAppPreferences"
-    private const val TOKEN_IV = "TokenIV"
-    private const val ENCRYPTED_TOKEN = "EncryptedToken"
+    public const val ALIAS = "MyKeyAlias"
+    public const val PREFS_FILENAME = "MyAppPreferences"
+    public const val TOKEN_IV = "TokenIV"
+    public const val ENCRYPTED_TOKEN = "EncryptedToken"
 
     private fun createKey(alias: String): SecretKey {
         val keyGenerator =
